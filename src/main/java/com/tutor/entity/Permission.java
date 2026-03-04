@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "permissions", schema = "tutor")
+@Table(name = "permissions", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +14,7 @@ public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permissions_seq")
-    @SequenceGenerator(name = "permissions_seq", sequenceName = "tutor.permissions_seq", allocationSize = 1)
+    @SequenceGenerator(name = "permissions_seq", sequenceName = "public.permissions_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, unique = true, length = 100)

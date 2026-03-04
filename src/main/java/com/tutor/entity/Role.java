@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles", schema = "tutor")
+@Table(name = "roles", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_seq")
-    @SequenceGenerator(name = "roles_seq", sequenceName = "tutor.roles_seq", allocationSize = 1)
+    @SequenceGenerator(name = "roles_seq", sequenceName = "public.roles_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -45,7 +45,7 @@ public class Role {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        schema = "tutor",
+        schema = "public",
         name = "role_permissions",
         joinColumns = @JoinColumn(name = "role_id"),
         inverseJoinColumns = @JoinColumn(name = "permission_id")

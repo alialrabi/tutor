@@ -6,9 +6,12 @@ import com.tutor.entity.UserProfile;
 import com.tutor.repository.RoleRepository;
 import com.tutor.repository.UserProfileRepository;
 import com.tutor.security.JwtService;
+import com.tutor.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,6 +65,7 @@ public class AuthService {
         return buildAuthResponse(token, user);
     }
 
+    @Transactional
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -72,6 +76,8 @@ public class AuthService {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtService.generateToken(userDetails);
+
+        user.setJwtToken(token);
 
         return buildAuthResponse(token, user);
     }
@@ -123,5 +129,20 @@ public class AuthService {
                 .roles(roles)
                 .permissions(permissions)
                 .build();
+    }
+
+    public void logout() {
+        Object principal = (UserDetailsImpl) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetailsImpl userDetails) {
+            String email = userDetails.getEmail();
+            UserProfile user = userProfileRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            user.setJwtToken(null);
+        }
+
+        throw new BadCredentialsException("");
     }
 }
