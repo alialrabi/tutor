@@ -1,0 +1,16 @@
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\dto\AuthDto.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\entity\UserProfile.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\repository\UserProfileRepository.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\entity\Role.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\dto\ApiResponse.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\security\JwtAuthenticationFilter.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\controller\AuthController.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\repository\RoleRepository.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\TutorPlatformApplication.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\security\JwtService.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\config\GlobalExceptionHandler.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\config\SecurityConfig.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\service\AuthService.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\security\UserDetailsServiceImpl.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\entity\Permission.java
+C:\Users\NTG\Downloads\tutor-platform\tutor-platform\backend\src\main\java\com\tutor\entity\Tutor.java
