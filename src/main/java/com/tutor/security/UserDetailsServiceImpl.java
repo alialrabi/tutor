@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserProfileRepository userProfileRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
         UserProfile user = userProfileRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
@@ -35,6 +35,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
 
-        return new User(user.getEmail(), user.getPassWord(), authorities);
+        return new UserDetailsImpl(user.getEmail(), user.getPassWord(), authorities);
     }
 }

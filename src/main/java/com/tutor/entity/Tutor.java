@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tutors", schema = "tutor")
+@Table(name = "tutors", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +15,7 @@ public class Tutor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tutor_seq")
-    @SequenceGenerator(name = "tutor_seq", sequenceName = "tutor.tutor_seq", allocationSize = 1)
+    @SequenceGenerator(name = "tutor_seq", sequenceName = "public.tutor_seq", allocationSize = 1)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
