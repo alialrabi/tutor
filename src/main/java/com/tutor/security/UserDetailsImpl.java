@@ -1,13 +1,10 @@
 package com.tutor.security;
 
-import com.tutor.entity.UserProfile;
-import jakarta.annotation.Nullable;
+import com.tutor.persistance.entity.UserProfile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 public class UserDetailsImpl extends User {
 
