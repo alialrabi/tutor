@@ -67,6 +67,8 @@ public class AuthService {
 
     @Transactional
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
+        System.out.println(authenticationManager.getClass());
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
