@@ -1,4 +1,4 @@
-package com.tutor.business.dto;
+package com.tutor.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

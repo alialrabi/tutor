@@ -1,6 +1,6 @@
 package com.tutor.controller;
 
-import com.tutor.business.dto.SearchRequest;
+import com.tutor.common.dto.SearchRequest;
 import com.tutor.business.dto.TutorDto;
 import com.tutor.business.usecase.TutorUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
