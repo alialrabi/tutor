@@ -1,6 +1,6 @@
 package com.tutor.business.service;
 
-import com.tutor.business.dto.AuthDto;
+import com.tutor.common.dto.AuthDto;
 import com.tutor.persistance.entity.Role;
 import com.tutor.persistance.entity.UserProfile;
 import com.tutor.persistance.repository.RoleRepository;

@@ -1,9 +1,7 @@
 package com.tutor.controller;
 
-import com.tutor.business.dto.SearchRequest;
-import com.tutor.business.dto.TutorDto;
+import com.tutor.common.dto.SearchRequest;
 import com.tutor.business.dto.UserDto;
-import com.tutor.business.usecase.TutorUseCase;
 import com.tutor.business.usecase.UserUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;

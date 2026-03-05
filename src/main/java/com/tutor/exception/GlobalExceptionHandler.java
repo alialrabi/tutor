@@ -1,6 +1,6 @@
-package com.tutor.config;
+package com.tutor.exception;
 
-import com.tutor.business.dto.ApiResponse;
+import com.tutor.common.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

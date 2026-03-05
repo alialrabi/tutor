@@ -1,6 +1,6 @@
 package com.tutor.business.service;
 
-import com.tutor.business.dto.SearchRequest;
+import com.tutor.common.dto.SearchRequest;
 import com.tutor.business.dto.UserDto;
 import com.tutor.business.mapper.UserMapper;
 import com.tutor.common.CommonCriteria;
