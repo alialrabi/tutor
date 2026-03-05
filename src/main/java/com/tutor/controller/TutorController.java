@@ -6,10 +6,7 @@ import com.tutor.business.usecase.TutorUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/tutors")
@@ -21,7 +18,12 @@ public class TutorController {
     @PostMapping("/search")
     public GenericResponseEntity<ResponseDataModel<TutorDto>> findAll(@RequestBody SearchRequest searchRequest) {
         ResponseDataModel<TutorDto> data = tutorUseCase.findAll(searchRequest);
-        return GenericResponseEntity.success(data);
+        return GenericResponseEntity.generateResponse(data);
+    }
+
+    @GetMapping("details")
+    public GenericResponseEntity<TutorDto> findOne(@RequestParam Long id) {
+        return GenericResponseEntity.generateResponse(tutorUseCase.findOne(id));
     }
 
 }

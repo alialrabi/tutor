@@ -21,7 +21,7 @@ public class UserController {
     @PostMapping("")
     public GenericResponseEntity<ResponseDataModel<UserDto>> findAll(@RequestBody SearchRequest searchRequest) {
         ResponseDataModel<UserDto> data = userUseCase.findAll(searchRequest);
-        return GenericResponseEntity.success(data);
+        return GenericResponseEntity.generateResponse(data);
     }
 
 }

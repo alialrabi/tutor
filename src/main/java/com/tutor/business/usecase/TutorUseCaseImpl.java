@@ -17,4 +17,9 @@ public class TutorUseCaseImpl implements TutorUseCase {
         return tutorService.findAll(searchRequest);
     }
 
+    @Override
+    public TutorDto findOne(Long id) {
+        return tutorService.findById(id);
+    }
+
 }

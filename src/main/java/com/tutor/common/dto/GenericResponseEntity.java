@@ -18,7 +18,7 @@ public class GenericResponseEntity<T> {
 
     private static final String REQUEST_UUID_KEY = "requestUUID";
 
-    public static <T> GenericResponseEntity<T> success(T data) {
+    public static <T> GenericResponseEntity<T> generateResponse(T data) {
         return GenericResponseEntity.<T>builder()
                 .responseStatus("SUCCESS")
                 .requestUUID(MDC.get(REQUEST_UUID_KEY))
