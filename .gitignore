@@ -1,0 +1,99 @@
+# =========================
+
+# Spring Boot / Java
+
+# =========================
+
+target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+
+.mvn/wrapper/maven-wrapper.jar
+
+# =========================
+
+# IDE - IntelliJ
+
+# =========================
+
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# =========================
+
+# IDE - Eclipse
+
+# =========================
+
+.project
+.classpath
+.settings/
+bin/
+
+# =========================
+
+# IDE - VS Code
+
+# =========================
+
+.vscode/
+
+# =========================
+
+# OS Files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# Logs
+
+# =========================
+
+logs/
+*.log
+
+# =========================
+
+# Environment Files
+
+# =========================
+
+.env
+.env.local
+
+# =========================
+
+# Spring Boot Devtools
+
+# =========================
+
+.spring-boot-devtools.properties
+
+# =========================
+
+# Docker
+
+# =========================
+
+docker-compose.override.yml
+
+# =========================
+
+# Temporary Files
+
+# =========================
+
+tmp/
+temp/
