@@ -3,6 +3,7 @@ package com.tutor;
 import com.tutor.business.dto.FilterColumn;
 import com.tutor.business.dto.SearchRequest;
 import com.tutor.business.dto.SortColumn;
+import com.tutor.dto.ResponseDataModel;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,17 +17,17 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CommonCriteria {
 
-    public <E, D> Page<D> findAll(
+    public <E, D> ResponseDataModel<D> findAll(
             JpaSpecificationExecutor<E> repository,
             SearchRequest searchRequest,
             Function<E, D> mapper
     ) {
-        
         Specification<E> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -54,11 +55,10 @@ public class CommonCriteria {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
-        Page<E> entityPage = preparePagingAndSorting(repository, searchRequest, spec);
-        return entityPage.map(mapper);
+        return preparePagingAndSorting(repository, searchRequest, mapper, spec);
     }
 
-    private <E> Page<E> preparePagingAndSorting(JpaSpecificationExecutor<E> repository, SearchRequest searchRequest, Specification<E> spec) {
+    private <E, D> ResponseDataModel<D> preparePagingAndSorting(JpaSpecificationExecutor<E> repository, SearchRequest searchRequest, Function<E, D> mapper, Specification<E> spec) {
         List<Sort.Order> orders = new ArrayList<>();
         if (searchRequest.getSortCriteria() != null && !searchRequest.getSortCriteria().isEmpty()) {
             for (SortColumn sortColumn : searchRequest.getSortCriteria()) {
@@ -72,6 +72,14 @@ public class CommonCriteria {
 
         Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), sort);
         Page<E> entityPage = repository.findAll(spec, pageable);
-        return entityPage;
+
+        List<D> content = entityPage.getContent().stream().map(mapper).collect(Collectors.toList());
+
+        return ResponseDataModel.<D>builder()
+                .content(content)
+                .numberOfRecords(entityPage.getTotalElements())
+                .pageIndex(entityPage.getNumber())
+                .pageSize(entityPage.getSize())
+                .build();
     }
 }
