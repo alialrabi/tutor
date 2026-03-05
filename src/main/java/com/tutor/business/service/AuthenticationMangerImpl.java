@@ -1,4 +1,4 @@
-package com.tutor.service;
+package com.tutor.business.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;

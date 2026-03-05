@@ -1,4 +1,4 @@
-package com.tutor.entity;
+package com.tutor.persistance.entity;
 
 import com.tutor.security.SecurityUtil;
 import jakarta.persistence.EntityListeners;

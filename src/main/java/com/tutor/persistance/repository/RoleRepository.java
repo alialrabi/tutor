@@ -1,6 +1,6 @@
-package com.tutor.repository;
+package com.tutor.persistance.repository;
 
-import com.tutor.entity.Role;
+import com.tutor.persistance.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

@@ -1,10 +1,10 @@
-package com.tutor.service;
+package com.tutor.business.service;
 
-import com.tutor.dto.AuthDto;
-import com.tutor.entity.Role;
-import com.tutor.entity.UserProfile;
-import com.tutor.repository.RoleRepository;
-import com.tutor.repository.UserProfileRepository;
+import com.tutor.business.dto.AuthDto;
+import com.tutor.persistance.entity.Role;
+import com.tutor.persistance.entity.UserProfile;
+import com.tutor.persistance.repository.RoleRepository;
+import com.tutor.persistance.repository.UserProfileRepository;
 import com.tutor.security.JwtService;
 import com.tutor.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;

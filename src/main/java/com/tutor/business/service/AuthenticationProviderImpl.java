@@ -1,4 +1,4 @@
-package com.tutor.service;
+package com.tutor.business.service;
 
 import com.tutor.security.UserDetailsImpl;
 import com.tutor.security.UserDetailsServiceImpl;

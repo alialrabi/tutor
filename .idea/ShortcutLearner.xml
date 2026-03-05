@@ -3,8 +3,9 @@
   <component name="ShortcutStateService">
     <option name="shortcutCounts">
       <map>
-        <entry key="FIND_ACTION" value="3" />
-        <entry key="FULL_SEARCH" value="11" />
+        <entry key="EXTRACT_METHOD" value="1" />
+        <entry key="FIND_ACTION" value="5" />
+        <entry key="FULL_SEARCH" value="16" />
       </map>
     </option>
   </component>
