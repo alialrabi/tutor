@@ -6,7 +6,7 @@
         <entry key="EXTRACT_METHOD" value="2" />
         <entry key="FIND_ACTION" value="7" />
         <entry key="FULL_SEARCH" value="17" />
-        <entry key="OPTIMISE_IMPORT" value="1" />
+        <entry key="OPTIMISE_IMPORT" value="2" />
         <entry key="RENAME" value="4" />
       </map>
     </option>

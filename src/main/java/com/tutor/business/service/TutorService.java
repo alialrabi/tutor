@@ -1,12 +1,11 @@
 package com.tutor.business.service;
 
-import com.tutor.CommonCriteria;
+import com.tutor.common.CommonCriteria;
 import com.tutor.business.dto.SearchRequest;
 import com.tutor.business.dto.TutorDto;
-import com.tutor.dto.ResponseDataModel;
+import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.persistance.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service

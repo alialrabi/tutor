@@ -2,9 +2,9 @@ package com.tutor.controller;
 
 import com.tutor.business.dto.SearchRequest;
 import com.tutor.business.dto.TutorDto;
-import com.tutor.dto.GenericResponseEntity;
-import com.tutor.dto.ResponseDataModel;
-import com.tutor.service.TutorService;
+import com.tutor.business.usecase.TutorUseCase;
+import com.tutor.common.dto.GenericResponseEntity;
+import com.tutor.common.dto.ResponseDataModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TutorController {
 
-    private final TutorService tutorService;
+    private final TutorUseCase tutorUseCase;
 
     @PostMapping("/search")
     public GenericResponseEntity<ResponseDataModel<TutorDto>> findAll(@RequestBody SearchRequest searchRequest) {
-        ResponseDataModel<TutorDto> data = tutorService.findAll(searchRequest);
+        ResponseDataModel<TutorDto> data = tutorUseCase.findAll(searchRequest);
         return GenericResponseEntity.success(data);
     }
 }
