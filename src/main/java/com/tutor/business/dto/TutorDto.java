@@ -1,12 +1,8 @@
 package com.tutor.business.dto;
 
+import com.tutor.common.dto.BaseDto;
 import com.tutor.persistance.entity.UserProfile;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 

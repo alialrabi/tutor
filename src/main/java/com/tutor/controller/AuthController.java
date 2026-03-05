@@ -1,7 +1,7 @@
 package com.tutor.controller;
 
-import com.tutor.business.dto.ApiResponse;
-import com.tutor.business.dto.AuthDto;
+import com.tutor.common.dto.ApiResponse;
+import com.tutor.common.dto.AuthDto;
 import com.tutor.business.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
