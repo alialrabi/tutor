@@ -1,9 +1,9 @@
-package com.tutor;
+package com.tutor.common;
 
 import com.tutor.business.dto.FilterColumn;
 import com.tutor.business.dto.SearchRequest;
 import com.tutor.business.dto.SortColumn;
-import com.tutor.dto.ResponseDataModel;
+import com.tutor.common.dto.ResponseDataModel;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

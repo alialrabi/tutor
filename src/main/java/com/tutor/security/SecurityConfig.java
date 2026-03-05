@@ -1,6 +1,5 @@
-package com.tutor.config;
+package com.tutor.security;
 
-import com.tutor.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +45,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
+                    .requestMatchers("/api/tutors/**").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
