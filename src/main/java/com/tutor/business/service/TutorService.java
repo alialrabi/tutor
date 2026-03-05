@@ -5,6 +5,7 @@ import com.tutor.common.CommonCriteria;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.business.dto.TutorDto;
 import com.tutor.common.dto.ResponseDataModel;
+import com.tutor.exception.BusinessException;
 import com.tutor.persistance.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,10 @@ public class TutorService  {
 
     public ResponseDataModel<TutorDto> findAll(SearchRequest searchRequest) {
         return commonCriteria.findAll(tutorRepository, searchRequest, tutorMapper::toDto);
+    }
+
+    public TutorDto findById(Long id) {
+        return tutorMapper.toDto(tutorRepository.findById(id)
+                .orElseThrow(()-> new BusinessException("Tutor not found")));
     }
 }

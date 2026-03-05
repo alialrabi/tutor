@@ -7,4 +7,5 @@ import com.tutor.common.dto.ResponseDataModel;
 public interface TutorUseCase {
 
     ResponseDataModel<TutorDto> findAll(SearchRequest searchRequest);
+    TutorDto findOne(Long id);
 }
