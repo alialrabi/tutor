@@ -23,4 +23,5 @@ public class TutorController {
         ResponseDataModel<TutorDto> data = tutorUseCase.findAll(searchRequest);
         return GenericResponseEntity.success(data);
     }
+
 }

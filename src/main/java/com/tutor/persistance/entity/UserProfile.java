@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user_profile", schema = "public")
+@Table(name = "user_profile", schema = "tutor")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class UserProfile extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-    @SequenceGenerator(name = "users_seq", sequenceName = "public.users_seq", allocationSize = 1)
+    @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", schema = "tutor", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -42,7 +42,7 @@ public class UserProfile extends AuditableEntity {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        schema = "public",
+        schema = "tutor",
         name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")

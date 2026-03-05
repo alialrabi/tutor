@@ -24,7 +24,8 @@ public class Tutor {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tutor_seq_gen")
     @SequenceGenerator(
             name = "tutor_seq_gen",
-            sequenceName = "tutor.tutor_seq",
+            sequenceName = "tutor_seq",
+            schema = "tutor",
             allocationSize = 1
     )
     private Long id;
