@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-05T15:55:37+0200",
+    date = "2026-03-05T17:31:24+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (JetBrains s.r.o.)"
 )
 @Component
@@ -22,9 +22,17 @@ public class TutorMapperImpl implements TutorMapper {
         TutorDto tutorDto = new TutorDto();
 
         tutorDto.setId( tutor.getId() );
-        tutorDto.setName( tutor.getName() );
-        tutorDto.setSubject( tutor.getSubject() );
-        tutorDto.setEmail( tutor.getEmail() );
+        tutorDto.setUser( tutor.getUser() );
+        tutorDto.setBio( tutor.getBio() );
+        tutorDto.setExperienceYears( tutor.getExperienceYears() );
+        tutorDto.setHourlyRate( tutor.getHourlyRate() );
+        tutorDto.setAcceptsOneToOne( tutor.getAcceptsOneToOne() );
+        tutorDto.setAcceptsOneToMany( tutor.getAcceptsOneToMany() );
+        tutorDto.setRating( tutor.getRating() );
+        tutorDto.setTotalReviews( tutor.getTotalReviews() );
+        tutorDto.setStatus( tutor.getStatus() );
+        tutorDto.setNumberOfSessions( tutor.getNumberOfSessions() );
+        tutorDto.setVideoId( tutor.getVideoId() );
 
         return tutorDto;
     }
