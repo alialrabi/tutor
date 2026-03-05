@@ -1,14 +1,12 @@
 package com.tutor.security;
 
-import com.tutor.entity.Permission;
-import com.tutor.entity.Role;
-import com.tutor.entity.UserProfile;
-import com.tutor.repository.UserProfileRepository;
+import com.tutor.persistance.entity.Permission;
+import com.tutor.persistance.entity.Role;
+import com.tutor.persistance.entity.UserProfile;
+import com.tutor.persistance.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

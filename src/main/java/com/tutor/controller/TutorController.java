@@ -1,8 +1,8 @@
 package com.tutor.controller;
 
-import com.tutor.dto.SearchRequest;
-import com.tutor.dto.TutorDto;
-import com.tutor.service.TutorService;
+import com.tutor.business.dto.SearchRequest;
+import com.tutor.business.dto.TutorDto;
+import com.tutor.business.service.TutorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

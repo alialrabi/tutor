@@ -1,7 +1,7 @@
-package com.tutor.service;
+package com.tutor.business.service;
 
-import com.tutor.dto.TutorDto;
-import com.tutor.entity.Tutor;
+import com.tutor.business.dto.TutorDto;
+import com.tutor.persistance.entity.Tutor;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 

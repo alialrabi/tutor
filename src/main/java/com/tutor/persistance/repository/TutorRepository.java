@@ -1,6 +1,6 @@
-package com.tutor.repository;
+package com.tutor.persistance.repository;
 
-import com.tutor.entity.Tutor;
+import com.tutor.persistance.entity.Tutor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

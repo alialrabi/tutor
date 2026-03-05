@@ -1,8 +1,8 @@
 package com.tutor.controller;
 
-import com.tutor.dto.ApiResponse;
-import com.tutor.dto.AuthDto;
-import com.tutor.service.AuthService;
+import com.tutor.business.dto.ApiResponse;
+import com.tutor.business.dto.AuthDto;
+import com.tutor.business.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

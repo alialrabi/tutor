@@ -1,4 +1,4 @@
-package com.tutor.dto;
+package com.tutor.business.dto;
 
 import lombok.Data;
 

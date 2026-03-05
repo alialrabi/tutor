@@ -1,8 +1,8 @@
 package com.tutor;
 
-import com.tutor.dto.FilterColumn;
-import com.tutor.dto.SearchRequest;
-import com.tutor.dto.SortColumn;
+import com.tutor.business.dto.FilterColumn;
+import com.tutor.business.dto.SearchRequest;
+import com.tutor.business.dto.SortColumn;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +26,7 @@ public class CommonCriteria {
             SearchRequest searchRequest,
             Function<E, D> mapper
     ) {
+        
         Specification<E> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
