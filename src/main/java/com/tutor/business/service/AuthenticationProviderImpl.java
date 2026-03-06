@@ -1,6 +1,6 @@
 package com.tutor.business.service;
 
-import com.tutor.security.UserDetailsImpl;
+import com.tutor.security.AppUserDetails;
 import com.tutor.security.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,7 +29,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         final String email = authentication.getName();
         final String password = authentication.getCredentials().toString();
 
-        UserDetailsImpl userDetails;
+        AppUserDetails userDetails;
 
         try {
             userDetails = userDetailsService.loadUserByUsername(email);

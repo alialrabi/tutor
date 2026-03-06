@@ -5,14 +5,13 @@ import com.tutor.persistance.entity.Role;
 import com.tutor.persistance.entity.UserProfile;
 import com.tutor.persistance.repository.RoleRepository;
 import com.tutor.persistance.repository.UserProfileRepository;
+import com.tutor.security.AppUserDetails;
 import com.tutor.security.JwtService;
-import com.tutor.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class AuthService {
 
         userProfileRepository.save(user);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(user.getEmail());
+        AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtService.generateToken(userDetails);
 
         return buildAuthResponse(token, user);
@@ -67,8 +66,6 @@ public class AuthService {
 
     @Transactional
     public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
-        System.out.println(authenticationManager.getClass());
-
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -76,7 +73,7 @@ public class AuthService {
         UserProfile user = userProfileRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(user.getEmail());
+        AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtService.generateToken(userDetails);
 
         user.setJwtToken(token);
@@ -134,10 +131,10 @@ public class AuthService {
     }
 
     public void logout() {
-        Object principal = (UserDetailsImpl) SecurityContextHolder
+        Object principal = (AppUserDetails) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetailsImpl userDetails) {
+        if (principal instanceof AppUserDetails userDetails) {
             String email = userDetails.getEmail();
             UserProfile user = userProfileRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found"));

@@ -17,7 +17,7 @@ public class SecurityUtil {
 
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof UserDetailsImpl userDetails) {
+        if (principal instanceof AppUserDetails userDetails) {
             return userDetails.getUserId();
         }
 
