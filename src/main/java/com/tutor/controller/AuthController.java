@@ -3,6 +3,8 @@ package com.tutor.controller;
 import com.tutor.common.dto.ApiResponse;
 import com.tutor.common.dto.AuthDto;
 import com.tutor.business.service.AuthService;
+import com.tutor.common.dto.GenericResponseEntity;
+import com.tutor.persistance.entity.UserProfile;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AuthDto.AuthResponse>> register(
+    public GenericResponseEntity<UserProfile> register(
             @Valid @RequestBody AuthDto.RegisterRequest request) {
-        AuthDto.AuthResponse response = authService.register(request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Registration successful"));
+        UserProfile response = authService.register(request);
+        return GenericResponseEntity.generateResponse(response);
     }
 
     @PostMapping("/login")
