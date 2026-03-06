@@ -8,14 +8,27 @@ import java.util.Collection;
 
 public class UserDetailsImpl extends User {
 
-    private UserProfile user;
+    private final UserProfile user;
 
-    public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
+    public UserDetailsImpl(UserProfile user, Collection<? extends GrantedAuthority> authorities) {
+        super(user.getEmail(), user.getPassWord(), authorities);
+        this.user = user;
     }
 
-    public UserDetailsImpl(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+    public Long getUserId() {
+        return user.getId();
+    }
+
+    public Long getTutorId() {
+        // Assuming UserProfile has a getTutor() method that returns a Tutor object with an id
+        if (user.getTutor() != null) {
+            return user.getTutor().getId();
+        }
+        return null;
+    }
+
+    public String getEmail() {
+        return user.getEmail();
     }
 
     @Override
@@ -36,14 +49,6 @@ public class UserDetailsImpl extends User {
     @Override
     public boolean isEnabled() {
         return super.isEnabled();
-    }
-
-    public Long getUserId() {
-        return user.getId();
-    }
-
-    public String getEmail() {
-        return user.getEmail();
     }
 
     @Override

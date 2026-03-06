@@ -5,7 +5,11 @@ import com.tutor.business.usecase.TimeSlotUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
+import com.tutor.controller.request.TimeSlotRequest;
+import com.tutor.security.AppUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +31,11 @@ public class TimeSlotController {
         return GenericResponseEntity.generateResponse(data);
     }
 
-    @PostMapping
-    public GenericResponseEntity<TimeSlotDto> create(@RequestBody TimeSlotDto timeSlotDto) {
-        TimeSlotDto data = timeSlotUseCase.create(timeSlotDto);
+    @PostMapping("create")
+    public GenericResponseEntity<TimeSlotDto> create(
+            @RequestBody @Valid TimeSlotRequest timeSlotRequest,
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        TimeSlotDto data = timeSlotUseCase.create(timeSlotRequest, userDetails);
         return GenericResponseEntity.generateResponse(data);
     }
 

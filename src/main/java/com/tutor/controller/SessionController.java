@@ -5,7 +5,9 @@ import com.tutor.business.usecase.SessionUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
+import com.tutor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,21 +17,27 @@ public class SessionController {
 
     private final SessionUseCase sessionUseCase;
 
-    @PostMapping("/list")
-    public GenericResponseEntity<ResponseDataModel<SessionDto>> findAll(@RequestBody SearchRequest searchRequest) {
+    @PostMapping("/search")
+    public GenericResponseEntity<ResponseDataModel<SessionDto>> findAll(
+            @RequestBody SearchRequest searchRequest) {
         ResponseDataModel<SessionDto> data = sessionUseCase.findAll(searchRequest);
         return GenericResponseEntity.generateResponse(data);
-}
+    }
 
     @GetMapping("/{id}")
     public GenericResponseEntity<SessionDto> findById(@PathVariable Long id) {
         SessionDto data = sessionUseCase.findById(id);
         return GenericResponseEntity.generateResponse(data);
-
     }
 
     @PostMapping
-    public GenericResponseEntity<SessionDto> create(@RequestBody SessionDto sessionDto) {
+    public GenericResponseEntity<SessionDto> create(
+            @RequestBody SessionDto sessionDto,
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        if (userDetails != null) {
+            System.out.println("User ID: " + userDetails.getUserId());
+            System.out.println("Tutor ID: " + userDetails.getTutorId());
+        }
         SessionDto data = sessionUseCase.create(sessionDto);
         return GenericResponseEntity.generateResponse(data);
     }
@@ -45,5 +53,4 @@ public class SessionController {
         sessionUseCase.delete(id);
         return GenericResponseEntity.generateResponse(null);
     }
-
 }

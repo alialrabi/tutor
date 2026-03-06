@@ -15,5 +15,4 @@ public class TimeSlotDto extends BaseDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Boolean isReserved;
-    private Long sessionId;
 }

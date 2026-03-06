@@ -33,6 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
 
-        return new UserDetailsImpl(user.getEmail(), user.getPassWord(), authorities);
+        return new UserDetailsImpl(user, authorities);
     }
 }

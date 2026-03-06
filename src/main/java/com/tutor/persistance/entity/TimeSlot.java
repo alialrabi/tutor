@@ -23,8 +23,11 @@ public class TimeSlot extends AuditableEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutor_id", nullable = false)
+    @JoinColumn(name = "tutor_id", nullable = false, insertable = false, updatable = false)
     private Tutor tutor;
+
+    @Column(name = "tutor_id")
+    private Long tutorId;
 
     @Column(columnDefinition = "start_time")
     private LocalDateTime startTime;

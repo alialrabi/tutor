@@ -32,7 +32,7 @@ public class Tutor {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile user;
+    private UserProfile userProfile;
 
     @Column(columnDefinition = "text")
     private String bio;

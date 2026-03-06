@@ -5,12 +5,16 @@ import com.tutor.business.mapper.TimeSlotMapper;
 import com.tutor.common.CommonCriteria;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
+import com.tutor.controller.request.TimeSlotRequest;
 import com.tutor.exception.BusinessException;
 import com.tutor.persistance.entity.TimeSlot;
 import com.tutor.persistance.repository.TimeSlotRepository;
+import com.tutor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TimeSlotService {
@@ -29,10 +33,14 @@ public class TimeSlotService {
         return timeSlotMapper.toDto(timeSlot);
     }
 
-    public TimeSlotDto create(TimeSlotDto timeSlotDto) {
-        TimeSlot timeSlot = timeSlotMapper.toEntity(timeSlotDto);
-        TimeSlot savedTimeSlot = timeSlotRepository.save(timeSlot);
-        return timeSlotMapper.toDto(savedTimeSlot);
+    public TimeSlotDto create(TimeSlotRequest timeSlotRequest, AppUserDetails userDetails) {
+        log.info("Create TimeSlot start date : {} and end date : {}", timeSlotRequest.getStartTime(),
+                timeSlotRequest.getEndTime());
+        TimeSlot timeSlot = new TimeSlot();
+        timeSlot.setStartTime(timeSlotRequest.getStartTime());
+        timeSlot.setEndTime(timeSlotRequest.getEndTime());
+        timeSlot.setTutorId(userDetails.getTutorId());
+        return timeSlotMapper.toDto(timeSlotRepository.save(timeSlot));
     }
 
     public TimeSlotDto update(Long id, TimeSlotDto timeSlotDto) {
