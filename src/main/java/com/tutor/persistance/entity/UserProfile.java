@@ -53,4 +53,7 @@ public class UserProfile extends AuditableEntity {
 
     @Column(name = "jwt_token")
     private String jwtToken;
+
+    @OneToOne(mappedBy = "userProfile")
+    private Tutor tutor;
 }

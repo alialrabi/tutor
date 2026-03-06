@@ -4,10 +4,10 @@
     <option name="shortcutCounts">
       <map>
         <entry key="EXTRACT_METHOD" value="2" />
-        <entry key="FIND_ACTION" value="9" />
+        <entry key="FIND_ACTION" value="10" />
         <entry key="FULL_SEARCH" value="22" />
-        <entry key="OPTIMISE_IMPORT" value="5" />
-        <entry key="RENAME" value="5" />
+        <entry key="OPTIMISE_IMPORT" value="9" />
+        <entry key="RENAME" value="7" />
       </map>
     </option>
   </component>

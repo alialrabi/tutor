@@ -1,0 +1,44 @@
+package com.tutor.persistance.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+@Data
+@Entity
+@Table(name = "time_slot", schema = "tutor")
+public class TimeSlot extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "time_slot_seq_gen")
+    @SequenceGenerator(
+            name = "time_slot_seq_gen",
+            sequenceName = "time_slot_id_seq",
+            schema = "tutor",
+            allocationSize = 1
+    )
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tutor_id", nullable = false, insertable = false, updatable = false)
+    private Tutor tutor;
+
+    @Column(name = "tutor_id")
+    private Long tutorId;
+
+    @Column(columnDefinition = "start_time")
+    private LocalDateTime startTime;
+
+    @Column(columnDefinition = "end_time")
+    private LocalDateTime endTime;
+
+    @Column(columnDefinition = "is_reserved")
+    private Boolean isReserved = false;
+
+    @OneToOne(mappedBy = "timeSlot")
+    private Session session;
+
+}
