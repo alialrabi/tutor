@@ -68,4 +68,11 @@ public class Tutor {
     @Column(name = "image")
     private byte[] image;
 
+    @Column(name = "category_id")
+    private Long categoryId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false, insertable = false, updatable = false)
+    private Category category;
+
 }

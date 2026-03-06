@@ -20,5 +20,6 @@ public class TutorDto extends BaseDto {
     private Long status = 0L;
     private Integer numberOfSessions;
     private String videoId;
+    private Long categoryId;
 }
 
