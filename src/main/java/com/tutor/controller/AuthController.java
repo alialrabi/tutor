@@ -1,13 +1,14 @@
 package com.tutor.controller;
 
-import com.tutor.common.dto.ApiResponse;
-import com.tutor.common.dto.AuthDto;
+import com.tutor.common.dto.*;
 import com.tutor.business.service.AuthService;
-import com.tutor.common.dto.GenericResponseEntity;
+import com.tutor.controller.request.LoginRequest;
+import com.tutor.controller.request.RegisterRequest;
+import com.tutor.controller.response.AuthResponse;
+import com.tutor.controller.response.UserProfileResponse;
 import com.tutor.persistance.entity.UserProfile;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -21,22 +22,22 @@ public class AuthController {
 
     @PostMapping("/register")
     public GenericResponseEntity<UserProfile> register(
-            @Valid @RequestBody AuthDto.RegisterRequest request) {
+            @Valid @RequestBody RegisterRequest request) {
         UserProfile response = authService.register(request);
         return GenericResponseEntity.generateResponse(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthDto.AuthResponse>> login(
-            @Valid @RequestBody AuthDto.LoginRequest request) {
-        AuthDto.AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(ApiResponse.success(response, "Login successful"));
+    public GenericResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.login(request);
+        return GenericResponseEntity.generateResponse(response);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<AuthDto.UserProfileResponse>> getCurrentUser(
+    public GenericResponseEntity<UserProfileResponse> getCurrentUser(
             @AuthenticationPrincipal UserDetails userDetails) {
-        AuthDto.UserProfileResponse response = authService.getCurrentUser(userDetails.getUsername());
-        return ResponseEntity.ok(ApiResponse.success(response, "User profile retrieved"));
+        UserProfileResponse response = authService.getCurrentUser(userDetails.getUsername());
+        return GenericResponseEntity.generateResponse(response);
     }
 }

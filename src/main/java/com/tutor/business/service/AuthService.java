@@ -1,6 +1,9 @@
 package com.tutor.business.service;
 
-import com.tutor.common.dto.AuthDto;
+import com.tutor.controller.request.RegisterRequest;
+import com.tutor.controller.response.AuthResponse;
+import com.tutor.controller.request.LoginRequest;
+import com.tutor.controller.response.UserProfileResponse;
 import com.tutor.persistance.entity.Role;
 import com.tutor.persistance.entity.UserProfile;
 import com.tutor.persistance.repository.RoleRepository;
@@ -34,17 +37,13 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
 
     @Transactional
-    public UserProfile register(AuthDto.RegisterRequest request) {
+    public UserProfile register(RegisterRequest request) {
         if (userProfileRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
 
         Set<Role> roles = new HashSet<>();
-        String roleName = request.getRole() != null ? request.getRole().toUpperCase() : "STUDENT";
-        roleRepository.findByName(roleName).ifPresent(roles::add);
-        if (roles.isEmpty()) {
-            roleRepository.findByName("STUDENT").ifPresent(roles::add);
-        }
+
 
         UserProfile user = UserProfile.builder()
                 .email(request.getEmail())
@@ -65,7 +64,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -96,7 +95,7 @@ public class AuthService {
         return permissions;
     }
 
-    public AuthDto.UserProfileResponse getCurrentUser(String email) {
+    public UserProfileResponse getCurrentUser(String email) {
         UserProfile user = userProfileRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -110,7 +109,7 @@ public class AuthService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        return AuthDto.UserProfileResponse.builder()
+        return UserProfileResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
@@ -122,8 +121,8 @@ public class AuthService {
                 .build();
     }
 
-    private AuthDto.AuthResponse buildAuthResponse(String token, UserProfile user) {
-        return AuthDto.AuthResponse.builder()
+    private AuthResponse buildAuthResponse(String token, UserProfile user) {
+        return AuthResponse.builder()
                 .token(token)
                 .tokenType("Bearer")
                 .build();

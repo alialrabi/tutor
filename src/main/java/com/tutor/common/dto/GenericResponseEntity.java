@@ -17,10 +17,12 @@ public class GenericResponseEntity<T> {
     private String traceError;
 
     private static final String REQUEST_UUID_KEY = "requestUUID";
+    private static final String RESPONSE_STATUS = "0";
+
 
     public static <T> GenericResponseEntity<T> generateResponse(T data) {
         return GenericResponseEntity.<T>builder()
-                .responseStatus("SUCCESS")
+                .responseStatus(RESPONSE_STATUS)
                 .requestUUID(MDC.get(REQUEST_UUID_KEY))
                 .data(data)
                 .build();
@@ -28,7 +30,7 @@ public class GenericResponseEntity<T> {
 
     public static <T> GenericResponseEntity<T> error(String traceError) {
         return GenericResponseEntity.<T>builder()
-                .responseStatus("ERROR")
+                .responseStatus("-1")
                 .requestUUID(MDC.get(REQUEST_UUID_KEY))
                 .traceError(traceError)
                 .build();

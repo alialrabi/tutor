@@ -5,9 +5,9 @@
       <map>
         <entry key="EXTRACT_METHOD" value="2" />
         <entry key="FIND_ACTION" value="10" />
-        <entry key="FULL_SEARCH" value="23" />
+        <entry key="FULL_SEARCH" value="25" />
         <entry key="OPTIMISE_IMPORT" value="14" />
-        <entry key="RENAME" value="7" />
+        <entry key="RENAME" value="8" />
       </map>
     </option>
   </component>
