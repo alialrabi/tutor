@@ -42,12 +42,19 @@ public class CommonCriteria {
                                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(filter.getColumnName())), "%" + filter.getValue().toLowerCase() + "%"));
                                 break;
                             case "GT":
-                                predicates.add(criteriaBuilder.greaterThan(root.get(filter.getColumnName()), filter.getValue()));
+                                // Using .as(String.class) is a quick way to allow comparison,
+                                // though parsing to the actual field type is more performant.
+                                predicates.add(criteriaBuilder.greaterThan(
+                                        root.get(filter.getColumnName()).as(String.class),
+                                        filter.getValue().toString()
+                                ));
                                 break;
                             case "LT":
-                                predicates.add(criteriaBuilder.lessThan(root.get(filter.getColumnName()), filter.getValue()));
-                                break;
-                            // Add more operations as needed
+                                predicates.add(criteriaBuilder.lessThan(
+                                        root.get(filter.getColumnName()).as(String.class),
+                                        filter.getValue().toString()
+                                ));
+                                break;           // Add more operations as needed
                         }
                     }
                 }

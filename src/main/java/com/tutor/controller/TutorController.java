@@ -1,10 +1,12 @@
 package com.tutor.controller;
 
+import com.tutor.common.dto.AuthDto;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.business.dto.TutorDto;
 import com.tutor.business.usecase.TutorUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,4 +28,8 @@ public class TutorController {
         return GenericResponseEntity.generateResponse(tutorUseCase.findOne(id));
     }
 
+    @PostMapping
+    public GenericResponseEntity<TutorDto> save(@RequestBody @Valid AuthDto.TutorRegisterRequest request) {
+        return GenericResponseEntity.generateResponse(tutorUseCase.save(request));
+    }
 }
