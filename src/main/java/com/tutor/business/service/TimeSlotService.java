@@ -54,6 +54,14 @@ public class TimeSlotService {
         return timeSlotMapper.toDto(updatedTimeSlot);
     }
 
+    public void updateReservation(Long id, Boolean isReserved) {
+        log.info("Update TimeSlot reservation to  : {}", isReserved);
+        TimeSlot timeSlot = timeSlotRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("TimeSlot not found"));
+        timeSlot.setIsReserved(isReserved);
+        timeSlotRepository.save(timeSlot);
+    }
+
     public void delete(Long id) {
         if (!timeSlotRepository.existsById(id)) {
             throw new BusinessException("TimeSlot not found");

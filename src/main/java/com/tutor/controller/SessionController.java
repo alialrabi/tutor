@@ -5,7 +5,9 @@ import com.tutor.business.usecase.SessionUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
+import com.tutor.controller.request.SessionRequest;
 import com.tutor.security.AppUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,15 +32,11 @@ public class SessionController {
         return GenericResponseEntity.generateResponse(data);
     }
 
-    @PostMapping
-    public GenericResponseEntity<SessionDto> create(
-            @RequestBody SessionDto sessionDto,
+    @PostMapping("create")
+    public GenericResponseEntity<Boolean> create(
+            @RequestBody @Valid SessionRequest sessionRequest,
             @AuthenticationPrincipal AppUserDetails userDetails) {
-        if (userDetails != null) {
-            System.out.println("User ID: " + userDetails.getUserId());
-            System.out.println("Tutor ID: " + userDetails.getTutorId());
-        }
-        SessionDto data = sessionUseCase.create(sessionDto);
+        Boolean data = sessionUseCase.create(sessionRequest, userDetails);
         return GenericResponseEntity.generateResponse(data);
     }
 

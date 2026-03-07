@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -31,11 +32,12 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(AppUserDetails userDetails) {
+    public String generateToken(AppUserDetails userDetails, List<String> permissions) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("userId", userDetails.getUserId());
         extraClaims.put("tutorId", userDetails.getTutorId());
         extraClaims.put("email", userDetails.getEmail());
+        extraClaims.put("permissions", permissions);
         return generateToken(extraClaims, userDetails);
     }
 
@@ -45,7 +47,7 @@ public class JwtService {
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts.builder()
-                .setClaims(extraClaims)
+                .addClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))

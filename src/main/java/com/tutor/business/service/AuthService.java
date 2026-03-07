@@ -34,7 +34,7 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
 
     @Transactional
-    public AuthDto.AuthResponse register(AuthDto.RegisterRequest request) {
+    public UserProfile register(AuthDto.RegisterRequest request) {
         if (userProfileRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
@@ -59,9 +59,9 @@ public class AuthService {
         userProfileRepository.save(user);
 
         AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
-        String token = jwtService.generateToken(userDetails);
+       // String token = jwtService.generateToken(userDetails);
 
-        return buildAuthResponse(token, user);
+        return user;
     }
 
     @Transactional
@@ -74,11 +74,26 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
-        String token = jwtService.generateToken(userDetails);
+        List<String> permissions = loadPermissions(user.getId());
+
+        String token = jwtService.generateToken(userDetails, permissions);
 
         user.setJwtToken(token);
 
         return buildAuthResponse(token, user);
+    }
+
+    public List<String> loadPermissions(Long userId) {
+        UserProfile user = userProfileRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<String> permissions = user.getRoles().stream()
+                .flatMap(r -> r.getPermissions().stream())
+                .map(p -> p.getName())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return permissions;
     }
 
     public AuthDto.UserProfileResponse getCurrentUser(String email) {
@@ -108,25 +123,9 @@ public class AuthService {
     }
 
     private AuthDto.AuthResponse buildAuthResponse(String token, UserProfile user) {
-        List<String> roles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
-
-        List<String> permissions = user.getRoles().stream()
-                .flatMap(r -> r.getPermissions().stream())
-                .map(p -> p.getName())
-                .distinct()
-                .collect(Collectors.toList());
-
         return AuthDto.AuthResponse.builder()
                 .token(token)
                 .tokenType("Bearer")
-                .userId(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .roles(roles)
-                .permissions(permissions)
                 .build();
     }
 
