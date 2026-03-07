@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 public class TutorDto extends BaseDto {
     private Long id;
-    private UserDto user;
+    private UserDto userProfile;
     private String bio;
     private Integer experienceYears;
     private BigDecimal hourlyRate;
