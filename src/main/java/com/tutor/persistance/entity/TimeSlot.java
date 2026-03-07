@@ -38,7 +38,4 @@ public class TimeSlot extends AuditableEntity {
     @Column(columnDefinition = "is_reserved")
     private Boolean isReserved = false;
 
-    @OneToOne(mappedBy = "timeSlot")
-    private Session session;
-
 }

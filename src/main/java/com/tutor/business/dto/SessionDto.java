@@ -13,8 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 public class SessionDto extends BaseDto {
-    private String title;
-    private String description;
     private Long tutorId;
     private List<TimeSlotDto> timeSlots;
 }
