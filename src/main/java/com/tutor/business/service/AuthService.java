@@ -1,5 +1,6 @@
 package com.tutor.business.service;
 
+import com.tutor.common.dto.AuthDto;
 import com.tutor.controller.request.RegisterRequest;
 import com.tutor.controller.response.AuthResponse;
 import com.tutor.controller.request.LoginRequest;
@@ -19,7 +20,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +38,16 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+
+    @Transactional(rollbackFor = IOException.class)
+    public String uploadPhoto(String email, MultipartFile file) throws IOException {
+        UserProfile user = userProfileRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setImage(file.getBytes());
+        userProfileRepository.save(user);
+        return "Success";
+    }
+
 
     @Transactional
     public UserProfile register(RegisterRequest request) {
@@ -58,7 +71,6 @@ public class AuthService {
         userProfileRepository.save(user);
 
         AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
-       // String token = jwtService.generateToken(userDetails);
 
         return user;
     }
@@ -95,6 +107,7 @@ public class AuthService {
         return permissions;
     }
 
+    @Transactional
     public UserProfileResponse getCurrentUser(String email) {
         UserProfile user = userProfileRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));

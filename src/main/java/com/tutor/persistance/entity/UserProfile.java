@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserProfile extends AuditableEntity {
+public class UserProfile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
@@ -37,9 +37,6 @@ public class UserProfile extends AuditableEntity {
     @Column(nullable = false)
     private Long status = 0L;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         schema = "tutor",
@@ -54,6 +51,14 @@ public class UserProfile extends AuditableEntity {
     @Column(name = "jwt_token")
     private String jwtToken;
 
-    @OneToOne(mappedBy = "userProfile")
+
+    @Lob
+    @Column(name = "image")
+    @Basic(fetch = FetchType.EAGER)
+    private byte[] image;
+
+    @OneToOne(mappedBy = "user")
     private Tutor tutor;
+
+
 }

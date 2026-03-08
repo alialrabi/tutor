@@ -7,11 +7,16 @@ import com.tutor.controller.request.RegisterRequest;
 import com.tutor.controller.response.AuthResponse;
 import com.tutor.controller.response.UserProfileResponse;
 import com.tutor.persistance.entity.UserProfile;
+import com.tutor.security.AppUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,6 +32,15 @@ public class AuthController {
         return GenericResponseEntity.generateResponse(response);
     }
 
+    @PostMapping(value = "/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public GenericResponseEntity<?> uploadPhoto(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("email") String email
+        ) throws IOException {
+        return GenericResponseEntity.generateResponse(authService.uploadPhoto(email, file));
+    }
+
+
     @PostMapping("/login")
     public GenericResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request) {
@@ -36,7 +50,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public GenericResponseEntity<UserProfileResponse> getCurrentUser(
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal AppUserDetails userDetails) {
         UserProfileResponse response = authService.getCurrentUser(userDetails.getUsername());
         return GenericResponseEntity.generateResponse(response);
     }

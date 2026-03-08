@@ -93,4 +93,15 @@ public class AuthDto {
 
         private byte[] image;
     }
+
+    @Getter
+    @Setter
+    public static class UploadPhotoRequest {
+        @NotBlank
+        @NotNull
+        private String email;
+        @NotNull
+        private byte []image;
+    }
+
 }

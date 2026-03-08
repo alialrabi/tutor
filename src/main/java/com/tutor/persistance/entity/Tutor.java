@@ -32,7 +32,7 @@ public class Tutor {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile userProfile;
+    private UserProfile user;
 
     @Column(columnDefinition = "text")
     private String bio;
@@ -63,10 +63,6 @@ public class Tutor {
 
     @Column(name = "video_id")
     private String videoId;
-
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
 
     @Column(name = "category_id")
     private Long categoryId;
