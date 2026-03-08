@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/sessions")
 @RequiredArgsConstructor
@@ -50,5 +52,17 @@ public class SessionController {
     public GenericResponseEntity<Void> delete(@PathVariable Long id) {
         sessionUseCase.delete(id);
         return GenericResponseEntity.generateResponse(null);
+    }
+
+    @GetMapping("/list/user")
+    public GenericResponseEntity<List<SessionDto>> findByUserProfileId(@RequestParam("id") Long userProfileId) {
+        List<SessionDto> data = sessionUseCase.findByUserProfileId(userProfileId);
+        return GenericResponseEntity.generateResponse(data);
+    }
+
+    @GetMapping("/list/tutor")
+    public GenericResponseEntity<List<SessionDto>> findByTutorId(@RequestParam("id") Long tutorId) {
+        List<SessionDto> data = sessionUseCase.findByTutorId(tutorId);
+        return GenericResponseEntity.generateResponse(data);
     }
 }

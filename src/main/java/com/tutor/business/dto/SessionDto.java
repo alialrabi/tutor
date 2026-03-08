@@ -1,6 +1,8 @@
 package com.tutor.business.dto;
 
 import com.tutor.common.dto.BaseDto;
+import com.tutor.persistance.entity.Tutor;
+import com.tutor.persistance.entity.UserProfile;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +14,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SessionDto extends BaseDto {
+public class SessionDto {
     private Long tutorId;
-    private List<TimeSlotDto> timeSlots;
+    private TutorDto tutor;
+    private UserDto userProfile;
+    private TimeSlotDto timeSlot;
 }

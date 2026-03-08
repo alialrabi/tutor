@@ -58,6 +58,12 @@ public class TimeSlotService {
         log.info("Update TimeSlot reservation to  : {}", isReserved);
         TimeSlot timeSlot = timeSlotRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("TimeSlot not found"));
+
+        if (timeSlot.getIsReserved() && isReserved) {
+            log.warn("Time slot is already reserved.");
+            throw new BusinessException("Time slot is already reserved.");
+        }
+
         timeSlot.setIsReserved(isReserved);
         timeSlotRepository.save(timeSlot);
     }

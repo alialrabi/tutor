@@ -11,7 +11,5 @@ import java.util.List;
 @Setter
 public class SessionRequest  {
     @NotNull
-    private Long tutorId;
-    @NotNull
     private Long timeSlotId;
 }
