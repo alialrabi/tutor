@@ -12,10 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public abstract class BaseEntity extends AuditableEntity implements Serializable {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

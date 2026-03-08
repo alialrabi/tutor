@@ -52,9 +52,7 @@ public class UserProfile extends BaseEntity {
     private String jwtToken;
 
 
-    @Lob
-    @Column(name = "image")
-    @Basic(fetch = FetchType.EAGER)
+    @Column(name = "image", columnDefinition = "bytea")
     private byte[] image;
 
     @OneToOne(mappedBy = "user")

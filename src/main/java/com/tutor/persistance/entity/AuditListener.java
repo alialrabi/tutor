@@ -3,6 +3,7 @@ package com.tutor.persistance.entity;
 import com.tutor.security.SecurityUtil;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 
 import java.time.LocalDateTime;
@@ -32,5 +33,15 @@ public class AuditListener {
             auditable.setUpdatedBy(userId);
         }
 
+    }
+
+    @PreRemove
+    public void preRemove(Object entity) {
+        if (entity instanceof BaseEntity baseEntity) {
+            LocalDateTime now = LocalDateTime.now();
+            baseEntity.setDeletedAt(now);
+            Long userId = SecurityUtil.getCurrentUserId();
+            baseEntity.setDeletedBy(userId);
         }
+    }
 }
