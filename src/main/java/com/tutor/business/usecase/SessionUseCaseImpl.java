@@ -1,6 +1,7 @@
 package com.tutor.business.usecase;
 
 import com.tutor.business.dto.SessionDto;
+import com.tutor.business.dto.TimeSlotDto;
 import com.tutor.business.service.SessionService;
 import com.tutor.business.service.TimeSlotService;
 import com.tutor.common.dto.ResponseDataModel;
@@ -10,6 +11,8 @@ import com.tutor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +34,9 @@ public class SessionUseCaseImpl implements SessionUseCase {
 
     @Override
     public Boolean create(SessionRequest sessionRequest, AppUserDetails userDetails) {
-        log.info("create session for tutor id {}", sessionRequest.getTutorId());
-        SessionDto sessionDto = sessionService.create(sessionRequest, userDetails);
+        TimeSlotDto timeSlotDto = timeSlotService.findById(sessionRequest.getTimeSlotId());
+        log.info("create session for tutor id {}", timeSlotDto.getTutorId());
+        SessionDto sessionDto = sessionService.create(sessionRequest, timeSlotDto.getTutorId(), userDetails);
         timeSlotService.updateReservation(sessionRequest.getTimeSlotId(), true);
         return true;
     }
@@ -46,5 +50,15 @@ public class SessionUseCaseImpl implements SessionUseCase {
     @Override
     public void delete(Long id) {
         sessionService.delete(id);
+    }
+
+    @Override
+    public List<SessionDto> findByUserProfileId(Long userProfileId) {
+        return sessionService.findByUserProfileId(userProfileId);
+    }
+
+    @Override
+    public List<SessionDto> findByTutorId(Long tutorId) {
+        return sessionService.findByTutorId(tutorId);
     }
 }

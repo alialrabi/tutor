@@ -1,6 +1,5 @@
 package com.tutor.business.service;
 
-
 import com.tutor.business.dto.SessionDto;
 import com.tutor.business.mapper.SessionMapper;
 import com.tutor.common.CommonCriteria;
@@ -11,15 +10,17 @@ import com.tutor.exception.BusinessException;
 import com.tutor.persistance.entity.Session;
 import com.tutor.persistance.repository.SessionRepository;
 import com.tutor.security.AppUserDetails;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
-public class SessionService  {
+public class SessionService {
 
     private final SessionRepository sessionRepository;
     private final CommonCriteria commonCriteria;
@@ -35,12 +36,12 @@ public class SessionService  {
         return sessionMapper.toDto(session);
     }
 
-    public SessionDto create(SessionRequest sessionRequest, AppUserDetails userDetails) {
+    public SessionDto create(SessionRequest sessionRequest, Long tutorId, AppUserDetails userDetails) {
         log.info("Create session tutor id {} and userId {}",
-                sessionRequest.getTutorId(), userDetails.getUserId());
-        Session session=new Session();
+                tutorId, userDetails.getUserId());
+        Session session = new Session();
         session.setUserProfileId(userDetails.getUserId());
-        session.setTutorId(sessionRequest.getTutorId());
+        session.setTutorId(tutorId);
         session.setTimeSlotId(sessionRequest.getTimeSlotId());
         Session savedSession = sessionRepository.save(session);
         return sessionMapper.toDto(savedSession);
@@ -59,5 +60,17 @@ public class SessionService  {
             throw new BusinessException("Session not found");
         }
         sessionRepository.deleteById(id);
+    }
+
+    public List<SessionDto> findByUserProfileId(Long userProfileId) {
+        return sessionRepository.findByUserProfileId(userProfileId).stream()
+                .map(sessionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SessionDto> findByTutorId(Long tutorId) {
+        return sessionRepository.findByTutorId(tutorId).stream()
+                .map(sessionMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
