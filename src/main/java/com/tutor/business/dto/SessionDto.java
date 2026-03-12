@@ -19,4 +19,5 @@ public class SessionDto {
     private TutorDto tutor;
     private UserDto userProfile;
     private TimeSlotDto timeSlot;
+    private String roomId;
 }

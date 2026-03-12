@@ -46,4 +46,7 @@ public class Session extends BaseEntity {
     @Column(name = "time_slot_id")
     private Long timeSlotId;
 
+    @Column(name = "room_id")
+    private String roomId;
+
 }

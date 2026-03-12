@@ -1,5 +1,6 @@
 package com.tutor.business.service;
 
+
 import com.tutor.business.dto.SessionDto;
 import com.tutor.business.mapper.SessionMapper;
 import com.tutor.common.CommonCriteria;
@@ -36,6 +37,7 @@ public class SessionService {
         return sessionMapper.toDto(session);
     }
 
+
     public SessionDto create(SessionRequest sessionRequest, Long tutorId, AppUserDetails userDetails) {
         log.info("Create session tutor id {} and userId {}",
                 tutorId, userDetails.getUserId());
@@ -47,12 +49,12 @@ public class SessionService {
         return sessionMapper.toDto(savedSession);
     }
 
-    public SessionDto update(Long id, SessionDto sessionDto) {
-        Session session = sessionRepository.findById(id)
+
+    public SessionDto updateRoomDetails(Long sessionId, String roomId) {
+        Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new BusinessException("Session not found"));
-        // Update fields as needed
-        Session updatedSession = sessionRepository.save(session);
-        return sessionMapper.toDto(updatedSession);
+        session.setRoomId(roomId);
+        return sessionMapper.toDto(sessionRepository.save(session));
     }
 
     public void delete(Long id) {

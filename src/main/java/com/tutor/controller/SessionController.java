@@ -42,12 +42,6 @@ public class SessionController {
         return GenericResponseEntity.generateResponse(data);
     }
 
-    @PutMapping("/{id}")
-    public GenericResponseEntity<SessionDto> update(@PathVariable Long id, @RequestBody SessionDto sessionDto) {
-        SessionDto data = sessionUseCase.update(id, sessionDto);
-        return GenericResponseEntity.generateResponse(data);
-    }
-
     @DeleteMapping("/{id}")
     public GenericResponseEntity<Void> delete(@PathVariable Long id) {
         sessionUseCase.delete(id);
