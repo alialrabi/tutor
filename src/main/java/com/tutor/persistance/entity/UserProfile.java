@@ -57,7 +57,7 @@ public class UserProfile extends BaseEntity {
     @Basic(fetch = FetchType.EAGER)
     private byte[] image;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "userProfile")
     private Tutor tutor;
 
 
