@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,6 +85,12 @@ public class SessionService {
 
     public List<SessionDto> findByTutorId(Long tutorId) {
         return sessionRepository.findByTutorId(tutorId).stream()
+                .map(sessionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SessionDto> findByTutorIdAndDateBetween(Long tutorId, LocalDate startDate, LocalDate endDate) {
+        return sessionRepository.findByTutorIdAndDateBetween(tutorId, startDate, endDate).stream()
                 .map(sessionMapper::toDto)
                 .collect(Collectors.toList());
     }
