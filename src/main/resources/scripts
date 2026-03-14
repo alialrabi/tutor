@@ -235,29 +235,6 @@ CREATE TABLE tutor.user_roles (
 );
 
 
--- tutor.time_slot definition
-
--- Drop table
-
--- DROP TABLE tutor.time_slot;
-
-CREATE TABLE tutor.time_slot (
-	id bigserial NOT NULL,
-	tutor_id int8 NOT NULL,
-	start_time timestamp NOT NULL,
-	end_time timestamp NOT NULL,
-	is_reserved bool DEFAULT false NULL,
-	status int8 DEFAULT 0 NOT NULL,
-	is_deleted int4 NULL,
-	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	created_by int8 NULL,
-	updated_by int8 NULL,
-	CONSTRAINT time_slot_pkey PRIMARY KEY (id),
-	CONSTRAINT time_slot_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE
-);
-
-
 -- tutor."session" definition
 
 -- Drop table
@@ -268,18 +245,40 @@ CREATE TABLE tutor."session" (
 	id bigserial NOT NULL,
 	user_profile_id int8 NOT NULL,
 	tutor_id int8 NOT NULL,
-	time_slot_id int8 NOT NULL,
 	status int8 DEFAULT 0 NOT NULL,
 	is_deleted int4 NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	created_by int8 NULL,
 	updated_by int8 NULL,
-	deleted_at timestamp(6) NULL,
-	deleted_by int8 NULL,
-	room_id varchar NULL,
+	room_id varchar(255) NULL,
+	session_date date NOT NULL,
+	start_time time NOT NULL,
+	end_time time NOT NULL,
 	CONSTRAINT session_pkey PRIMARY KEY (id),
 	CONSTRAINT session_student_id_fkey FOREIGN KEY (user_profile_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE,
-	CONSTRAINT session_time_slot_id_fkey FOREIGN KEY (time_slot_id) REFERENCES tutor.time_slot(id) ON DELETE CASCADE,
 	CONSTRAINT session_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE
+);
+
+
+-- tutor.time_slot definition
+
+-- Drop table
+
+-- DROP TABLE tutor.time_slot;
+
+CREATE TABLE tutor.time_slot (
+	id bigserial NOT NULL,
+	tutor_id int8 NOT NULL,
+	start_time time NOT NULL,
+	end_time time NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	day_of_week int4 NULL,
+	CONSTRAINT time_slot_pkey PRIMARY KEY (id),
+	CONSTRAINT time_slot_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE
 );
