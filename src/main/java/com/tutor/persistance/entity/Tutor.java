@@ -37,6 +37,9 @@ public class Tutor {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(columnDefinition = "text")
     private String bio;
 
