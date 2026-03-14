@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -29,13 +28,13 @@ public class TimeSlot extends AuditableEntity {
     @Column(name = "tutor_id")
     private Long tutorId;
 
-    @Column(columnDefinition = "start_time")
-    private LocalDateTime startTime;
+    @Column(columnDefinition = "time")
+    private LocalTime startTime;
 
-    @Column(columnDefinition = "end_time")
-    private LocalDateTime endTime;
+    @Column(columnDefinition = "time")
+    private LocalTime endTime;
 
-    @Column(columnDefinition = "is_reserved")
-    private Boolean isReserved = false;
+    @Column(name = "day_of_week")
+    private Integer dayOfWeek;
 
 }

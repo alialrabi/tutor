@@ -1,17 +1,21 @@
 package com.tutor.business.usecase;
 
 import com.tutor.business.dto.TimeSlotDto;
+import com.tutor.business.dto.TutorTimeSlotResponseDto;
 import com.tutor.business.service.TimeSlotService;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.controller.request.TimeSlotRequest;
 import com.tutor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class TimeSlotUseCaseImpl implements TimeSlotUseCase {
@@ -28,11 +32,41 @@ public class TimeSlotUseCaseImpl implements TimeSlotUseCase {
         return timeSlotService.findById(id);
     }
 
-    @Transactional
     @Override
-    public TimeSlotDto create(TimeSlotRequest timeSlotRequest, AppUserDetails userDetails) {
-        log.info("create time slot for tutor id: {}", userDetails.getTutorId());
-        return timeSlotService.create(timeSlotRequest, userDetails);
+    public List<TimeSlotDto> findByTutorId(Long tutorId) {
+        return timeSlotService.findByTutorId(tutorId);
+    }
+
+    @Override
+    public List<TutorTimeSlotResponseDto> findByTutorIdWithDates(Long tutorId) {
+        List<TimeSlotDto> timeSlots = timeSlotService.findByTutorId(tutorId);
+        List<TutorTimeSlotResponseDto> response = new ArrayList<>();
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = tomorrow.plusDays(i);
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+          //  int dayOfWeekValue = dayOfWeek.getValue() == 7 ? 1 : dayOfWeek.getValue();
+
+            for (TimeSlotDto ts : timeSlots) {
+                if (ts.getDayOfWeek() .equals( dayOfWeek.getValue())) {
+                    TutorTimeSlotResponseDto dto = new TutorTimeSlotResponseDto();
+                    dto.setId(ts.getId());
+                    dto.setDate(date);
+                    dto.setStartTime(ts.getStartTime());
+                    dto.setEndTime(ts.getEndTime());
+                    dto.setDayOfWeek(ts.getDayOfWeek());
+                    dto.setTutorId(ts.getTutorId());
+                    response.add(dto);
+                }
+            }
+        }
+        return response;
+    }
+
+    @Override
+    public List<TimeSlotDto> create(List<TimeSlotRequest> timeSlotRequests, AppUserDetails userDetails) {
+        return timeSlotService.create(timeSlotRequests, userDetails);
     }
 
     @Override

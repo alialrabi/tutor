@@ -51,6 +51,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GenericResponseEntity<Void>> handleException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(GenericResponseEntity.error("Internal server error"));
+                .body(GenericResponseEntity.error(ex.getMessage()));
     }
 }
