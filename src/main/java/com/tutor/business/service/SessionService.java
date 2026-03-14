@@ -1,6 +1,5 @@
 package com.tutor.business.service;
 
-
 import com.tutor.business.dto.SessionDto;
 import com.tutor.business.mapper.SessionMapper;
 import com.tutor.common.CommonCriteria;
@@ -37,24 +36,37 @@ public class SessionService {
         return sessionMapper.toDto(session);
     }
 
+    public Session findEntityById(Long id) {
+        return sessionRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Session not found"));
+    }
 
-    public SessionDto create(SessionRequest sessionRequest, Long tutorId, AppUserDetails userDetails) {
-        log.info("Create session tutor id {} and userId {}",
-                tutorId, userDetails.getUserId());
+    public SessionDto create(SessionRequest sessionRequest, AppUserDetails userDetails) {
+        log.info("Create session for tutor id {} and user id {}",
+                sessionRequest.getTutorId(), userDetails.getUserId());
         Session session = new Session();
         session.setUserProfileId(userDetails.getUserId());
-        session.setTutorId(tutorId);
-        session.setTimeSlotId(sessionRequest.getTimeSlotId());
+        session.setTutorId(sessionRequest.getTutorId());
+        session.setDate(sessionRequest.getDate());
+        session.setStartTime(sessionRequest.getStartTime());
+        session.setEndTime(sessionRequest.getEndTime());
         Session savedSession = sessionRepository.save(session);
         return sessionMapper.toDto(savedSession);
     }
 
+    public SessionDto update(Long id, SessionDto sessionDto) {
+        Session session = sessionRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Session not found"));
+        // Update fields as needed
+        Session updatedSession = sessionRepository.save(session);
+        return sessionMapper.toDto(updatedSession);
+    }
 
-    public SessionDto updateRoomDetails(Long sessionId, String roomId) {
+    public void updateRoomDetails(Long sessionId, String roomId, String roomUrl) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new BusinessException("Session not found"));
         session.setRoomId(roomId);
-        return sessionMapper.toDto(sessionRepository.save(session));
+        sessionRepository.save(session);
     }
 
     public void delete(Long id) {

@@ -1,15 +1,21 @@
 package com.tutor.controller.request;
 
-import com.tutor.business.dto.TimeSlotDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
-public class SessionRequest  {
+public class SessionRequest {
     @NotNull
-    private Long timeSlotId;
+    private LocalDate date;
+    @NotNull
+    private LocalTime startTime;
+    @NotNull
+    private LocalTime endTime;
+    @NotNull
+    private Long tutorId;
 }

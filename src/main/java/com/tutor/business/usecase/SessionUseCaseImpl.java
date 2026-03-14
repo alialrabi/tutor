@@ -1,9 +1,7 @@
 package com.tutor.business.usecase;
 
 import com.tutor.business.dto.SessionDto;
-import com.tutor.business.dto.TimeSlotDto;
 import com.tutor.business.service.SessionService;
-import com.tutor.business.service.TimeSlotService;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.controller.request.RoomRequest;
@@ -31,7 +29,6 @@ import java.util.Map;
 public class SessionUseCaseImpl implements SessionUseCase {
 
     private final SessionService sessionService;
-    private final TimeSlotService timeSlotService;
     private final RestTemplate dailyRestTemplate;
 
     @Value("${daily.api.base-url}")
@@ -49,10 +46,8 @@ public class SessionUseCaseImpl implements SessionUseCase {
 
     @Override
     public Boolean create(SessionRequest sessionRequest, AppUserDetails userDetails) {
-        TimeSlotDto timeSlotDto = timeSlotService.findById(sessionRequest.getTimeSlotId());
-        log.info("create session for tutor id {}", timeSlotDto.getTutorId());
-        SessionDto sessionDto = sessionService.create(sessionRequest, timeSlotDto.getTutorId(), userDetails);
-        timeSlotService.updateReservation(sessionRequest.getTimeSlotId(), true);
+        log.info("create session for tutor id {}", sessionRequest.getTutorId());
+        SessionDto sessionDto = sessionService.create(sessionRequest, userDetails);
         return true;
     }
 
@@ -60,7 +55,8 @@ public class SessionUseCaseImpl implements SessionUseCase {
     @Override
     public SessionDto update(Long id, String roomId) {
         log.info("update session for tutor id {}", id);
-        return sessionService.updateRoomDetails(id, roomId);
+        sessionService.updateRoomDetails(id, roomId, roomId);
+        return sessionService.findById(id);
     }
 
     @Override
@@ -90,8 +86,8 @@ public class SessionUseCaseImpl implements SessionUseCase {
         }
 
         DailyRoomResponse response = createNewRoom();
-
-        update(roomRequest.getSessionId(), response.getUrl());
+        
+        sessionService.updateRoomDetails(roomRequest.getSessionId(), response.getId(), response.getUrl());
         return response.getUrl();
     }
 
