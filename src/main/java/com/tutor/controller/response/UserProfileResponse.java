@@ -16,5 +16,6 @@ public class UserProfileResponse {
     private Long status;
     private java.util.List<String> roles;
     private java.util.List<String> permissions;
+    private byte[] image;
 }
 
