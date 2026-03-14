@@ -4,13 +4,14 @@ import com.tutor.common.dto.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Setter
 @Getter
-public class TimeSlotDto extends BaseDto {
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Boolean isReserved;
+public class TimeSlotDto {
+    private Long id;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private Integer dayOfWeek;
     private Long tutorId;
 }

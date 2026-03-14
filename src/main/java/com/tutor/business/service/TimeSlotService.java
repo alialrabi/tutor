@@ -13,6 +13,10 @@ import com.tutor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,14 +37,27 @@ public class TimeSlotService {
         return timeSlotMapper.toDto(timeSlot);
     }
 
-    public TimeSlotDto create(TimeSlotRequest timeSlotRequest, AppUserDetails userDetails) {
-        log.info("Create TimeSlot start date : {} and end date : {}", timeSlotRequest.getStartTime(),
-                timeSlotRequest.getEndTime());
-        TimeSlot timeSlot = new TimeSlot();
-        timeSlot.setStartTime(timeSlotRequest.getStartTime());
-        timeSlot.setEndTime(timeSlotRequest.getEndTime());
-        timeSlot.setTutorId(userDetails.getTutorId());
-        return timeSlotMapper.toDto(timeSlotRepository.save(timeSlot));
+    public List<TimeSlotDto> findByTutorId(Long tutorId) {
+        return timeSlotRepository.findByTutorId(tutorId).stream()
+                .map(timeSlotMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<TimeSlotDto> create(List<TimeSlotRequest> timeSlotRequests, AppUserDetails userDetails) {
+        log.info("Updating time slots for tutorId {}", userDetails.getTutorId());
+        timeSlotRepository.deleteByTutorId(userDetails.getTutorId());
+        List<TimeSlot> timeSlots = timeSlotRequests.stream().map(timeSlotRequest -> {
+            TimeSlot timeSlot = new TimeSlot();
+            timeSlot.setStartTime(timeSlotRequest.getStartTime());
+            timeSlot.setEndTime(timeSlotRequest.getEndTime());
+            timeSlot.setDayOfWeek(timeSlotRequest.getDayOfWeek());
+            timeSlot.setTutorId(userDetails.getTutorId());
+            return timeSlot;
+        }).collect(Collectors.toList());
+
+        List<TimeSlot> savedTimeSlots = timeSlotRepository.saveAll(timeSlots);
+        return savedTimeSlots.stream().map(timeSlotMapper::toDto).collect(Collectors.toList());
     }
 
     public TimeSlotDto update(Long id, TimeSlotDto timeSlotDto) {
@@ -49,7 +66,7 @@ public class TimeSlotService {
         // Update fields as needed
         timeSlot.setStartTime(timeSlotDto.getStartTime());
         timeSlot.setEndTime(timeSlotDto.getEndTime());
-        timeSlot.setIsReserved(timeSlotDto.getIsReserved());
+        timeSlot.setDayOfWeek(timeSlotDto.getDayOfWeek());
         TimeSlot updatedTimeSlot = timeSlotRepository.save(timeSlot);
         return timeSlotMapper.toDto(updatedTimeSlot);
     }
@@ -59,12 +76,6 @@ public class TimeSlotService {
         TimeSlot timeSlot = timeSlotRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("TimeSlot not found"));
 
-        if (timeSlot.getIsReserved() && isReserved) {
-            log.warn("Time slot is already reserved.");
-            throw new BusinessException("Time slot is already reserved.");
-        }
-
-        timeSlot.setIsReserved(isReserved);
         timeSlotRepository.save(timeSlot);
     }
 

@@ -1,13 +1,11 @@
 package com.tutor.persistance.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -39,14 +37,16 @@ public class Session extends BaseEntity {
     @Column(name = "tutor_id")
     private Long tutorId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "time_slot_id", nullable = false, insertable = false, updatable = false)
-    private TimeSlot timeSlot;
-
-    @Column(name = "time_slot_id")
-    private Long timeSlotId;
-
     @Column(name = "room_id")
     private String roomId;
+
+    @Column(name = "session_date")
+    private LocalDate date;
+
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
 }

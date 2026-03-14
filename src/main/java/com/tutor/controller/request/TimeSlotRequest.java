@@ -4,13 +4,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 public class TimeSlotRequest {
     @NotNull
-    private LocalDateTime startTime;
+    private LocalTime startTime;
     @NotNull
-    private LocalDateTime endTime;
+    private LocalTime endTime;
+    @NotNull
+    private Integer dayOfWeek;
 }

@@ -1,6 +1,5 @@
 package com.tutor.business.service;
 
-
 import com.tutor.business.dto.SessionDto;
 import com.tutor.business.mapper.SessionMapper;
 import com.tutor.common.CommonCriteria;
@@ -15,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,24 +37,37 @@ public class SessionService {
         return sessionMapper.toDto(session);
     }
 
+    public Session findEntityById(Long id) {
+        return sessionRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Session not found"));
+    }
 
-    public SessionDto create(SessionRequest sessionRequest, Long tutorId, AppUserDetails userDetails) {
-        log.info("Create session tutor id {} and userId {}",
-                tutorId, userDetails.getUserId());
+    public SessionDto create(SessionRequest sessionRequest, AppUserDetails userDetails) {
+        log.info("Create session for tutor id {} and user id {}",
+                sessionRequest.getTutorId(), userDetails.getUserId());
         Session session = new Session();
         session.setUserProfileId(userDetails.getUserId());
-        session.setTutorId(tutorId);
-        session.setTimeSlotId(sessionRequest.getTimeSlotId());
+        session.setTutorId(sessionRequest.getTutorId());
+        session.setDate(sessionRequest.getDate());
+        session.setStartTime(sessionRequest.getStartTime());
+        session.setEndTime(sessionRequest.getEndTime());
         Session savedSession = sessionRepository.save(session);
         return sessionMapper.toDto(savedSession);
     }
 
+    public SessionDto update(Long id, SessionDto sessionDto) {
+        Session session = sessionRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Session not found"));
+        // Update fields as needed
+        Session updatedSession = sessionRepository.save(session);
+        return sessionMapper.toDto(updatedSession);
+    }
 
-    public SessionDto updateRoomDetails(Long sessionId, String roomId) {
+    public void updateRoomDetails(Long sessionId, String roomId, String roomUrl) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new BusinessException("Session not found"));
         session.setRoomId(roomId);
-        return sessionMapper.toDto(sessionRepository.save(session));
+        sessionRepository.save(session);
     }
 
     public void delete(Long id) {
@@ -72,6 +85,12 @@ public class SessionService {
 
     public List<SessionDto> findByTutorId(Long tutorId) {
         return sessionRepository.findByTutorId(tutorId).stream()
+                .map(sessionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SessionDto> findByTutorIdAndDateBetween(Long tutorId, LocalDate startDate, LocalDate endDate) {
+        return sessionRepository.findByTutorIdAndDateBetween(tutorId, startDate, endDate).stream()
                 .map(sessionMapper::toDto)
                 .collect(Collectors.toList());
     }

@@ -34,7 +34,7 @@ public class SessionController {
         return GenericResponseEntity.generateResponse(data);
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public GenericResponseEntity<Boolean> create(
             @RequestBody @Valid SessionRequest sessionRequest,
             @AuthenticationPrincipal AppUserDetails userDetails) {

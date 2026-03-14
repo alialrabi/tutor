@@ -1,21 +1,19 @@
-package com.tutor.controller.request;
+package com.tutor.business.dto;
 
-import jakarta.validation.constraints.NotNull;
+import com.tutor.common.dto.BaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
 @Setter
-public class SessionRequest {
-    @NotNull
+@Getter
+public class TutorTimeSlotResponseDto extends BaseDto {
     private LocalDate date;
-    @NotNull
     private LocalTime startTime;
-    @NotNull
     private LocalTime endTime;
-    @NotNull
+    private Integer dayOfWeek;
+    private Boolean isReserved;
     private Long tutorId;
 }
