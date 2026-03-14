@@ -42,6 +42,7 @@ public class SessionService {
                 .orElseThrow(() -> new BusinessException("Session not found"));
     }
 
+
     public SessionDto create(SessionRequest sessionRequest, AppUserDetails userDetails) {
         log.info("Create session for tutor id {} and user id {}",
                 sessionRequest.getTutorId(), userDetails.getUserId());
