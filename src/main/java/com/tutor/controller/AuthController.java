@@ -1,7 +1,9 @@
 package com.tutor.controller;
 
+import com.tutor.business.service.GoogleAuthService;
 import com.tutor.common.dto.*;
 import com.tutor.business.service.AuthService;
+import com.tutor.controller.request.GoogleTokenRequest;
 import com.tutor.controller.request.LoginRequest;
 import com.tutor.controller.request.RegisterRequest;
 import com.tutor.controller.response.AuthResponse;
@@ -10,12 +12,14 @@ import com.tutor.persistance.entity.UserProfile;
 import com.tutor.security.AppUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.AuthenticationException;
 import java.io.IOException;
 
 @RestController
@@ -40,11 +44,21 @@ public class AuthController {
         return GenericResponseEntity.generateResponse(authService.uploadPhoto(email, file));
     }
 
+    @Autowired
+    private GoogleAuthService googleAuthService;
+
 
     @PostMapping("/login")
     public GenericResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
+        return GenericResponseEntity.generateResponse(response);
+    }
+
+    @PostMapping("/google")
+    public GenericResponseEntity<AuthResponse> loginWithGoogle(
+            @RequestBody GoogleTokenRequest request) throws AuthenticationException {
+        AuthResponse response = googleAuthService.authenticateWithGoogle(request.getIdToken());
         return GenericResponseEntity.generateResponse(response);
     }
 

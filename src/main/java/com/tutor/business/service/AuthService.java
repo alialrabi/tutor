@@ -66,6 +66,7 @@ public class AuthService {
                 .phoneNumber(request.getPhoneNumber())
                 .status(0L)
                 .roles(roles)
+                .userType(request.getUserType())
                 .build();
 
         userProfileRepository.save(user);

@@ -13,8 +13,9 @@ public class AppUserDetails extends User {
 
     private final UserProfile user;
 
+
     public AppUserDetails(UserProfile user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getEmail(), user.getPassWord(), authorities);
+        super(user.getEmail(), user.getPassWord() != null ? user.getPassWord() : "", authorities);
         this.user = user;
     }
 

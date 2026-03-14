@@ -1,7 +1,9 @@
 package com.tutor.controller.request;
 
+import com.tutor.enums.UserType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +27,6 @@ public class RegisterRequest {
     @NotBlank
     private String phoneNumber;
 
+    @NotNull
+    private UserType userType;
 }
