@@ -39,9 +39,7 @@ public class AuditListener {
     public void preRemove(Object entity) {
         if (entity instanceof BaseEntity baseEntity) {
             LocalDateTime now = LocalDateTime.now();
-            baseEntity.setDeletedAt(now);
             Long userId = SecurityUtil.getCurrentUserId();
-            baseEntity.setDeletedBy(userId);
         }
     }
 }
