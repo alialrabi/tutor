@@ -1,7 +1,9 @@
 package com.tutor.business.usecase;
 
 import com.tutor.business.dto.SessionDto;
+import com.tutor.business.dto.TutorDto;
 import com.tutor.business.service.SessionService;
+import com.tutor.business.service.TutorService;
 import com.tutor.common.MessageService;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
@@ -32,6 +34,7 @@ public class SessionUseCaseImpl implements SessionUseCase {
     private final SessionService sessionService;
     private final RestTemplate dailyRestTemplate;
     private final MessageService messageService;
+    private final TutorService tutorService;
 
     @Value("${daily.api.base-url}")
     private String dailyApiBaseUrl;
@@ -50,9 +53,10 @@ public class SessionUseCaseImpl implements SessionUseCase {
     @Transactional
     public Boolean create(SessionRequest sessionRequest, AppUserDetails userDetails) {
         log.info("create session for tutor id {}", sessionRequest.getTutorId());
-        SessionDto sessionDto = sessionService.create(sessionRequest, userDetails);
-     //   messageService.sendNotification(sessionDto.getUserProfile().getEmail(),
-      //          "New session has been reserved","New session has been reserved");
+        TutorDto tutor=tutorService.findById(sessionRequest.getTutorId());
+        sessionService.create(sessionRequest, userDetails);
+        messageService.sendNotification(tutor.getUserProfile().getEmail(),
+                "New session has been reserved","New session has been reserved");
         return true;
     }
 

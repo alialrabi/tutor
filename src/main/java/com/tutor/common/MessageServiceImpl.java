@@ -3,12 +3,14 @@ package com.tutor.common;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
 
 @Service
+@Slf4j
 public class MessageServiceImpl implements MessageService {
 
     @Value("${mail.smtp.username}")
@@ -30,7 +32,7 @@ public class MessageServiceImpl implements MessageService {
     private String starttls;
 
     public Boolean sendNotification( String to, String subject, String body){
-
+        log.info("send Notification message to: {}", to);
         Properties props = new Properties();
         props.put("mail.smtp.auth", auth);
         props.put("mail.smtp.starttls.enable", starttls);
@@ -56,9 +58,10 @@ public class MessageServiceImpl implements MessageService {
             message.setText(body);
 
             Transport.send(message);
+            log.info("Message sent successfully");
 
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.error("Error in sending email", e.getMessage());
         }
 
         return true;
