@@ -31,11 +31,8 @@ public class Tutor {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
-    private UserProfile userProfile;
-
-    @Column(name = "user_id")
-    private Long userId;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserProfile user;
 
     @Column(columnDefinition = "text")
     private String bio;

@@ -64,7 +64,7 @@ public class UserProfile extends BaseEntity {
     @Column(name = "image", columnDefinition = "bytea")
     private byte[] image;
 
-    @OneToOne(mappedBy = "userProfile")
+    @OneToOne(mappedBy = "user")
     private Tutor tutor;
 
     @Enumerated(EnumType.STRING)
