@@ -1,7 +1,13 @@
 package com.tutor.persistance.entity;
 
+import com.tutor.common.ProviderConverter;
+import com.tutor.common.UserTypeConverter;
+import com.tutor.enums.Provider;
+import com.tutor.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.security.AuthProvider;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +28,7 @@ public class UserProfile extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "pass_word", nullable = false)
+    @Column(name = "pass_word", nullable = true)
     private String passWord;
 
     @Column(name = "first_name", nullable = false)
@@ -31,7 +37,7 @@ public class UserProfile extends BaseEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -48,6 +54,9 @@ public class UserProfile extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
     @Column(name = "jwt_token")
     private String jwtToken;
 
@@ -58,5 +67,12 @@ public class UserProfile extends BaseEntity {
     @OneToOne(mappedBy = "userProfile")
     private Tutor tutor;
 
+    @Enumerated(EnumType.STRING)
+    @Convert(converter = UserTypeConverter.class)
+    private UserType userType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Convert(converter = ProviderConverter.class)
+    private Provider provider;
 }
