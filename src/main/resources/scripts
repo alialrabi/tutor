@@ -160,7 +160,7 @@ CREATE TABLE tutor.user_profile (
 	updated_by int8 NULL,
 	jwt_token varchar(1000) NULL,
 	deleted_by int8 NULL,
-	image oid NULL,
+	image bytea NULL,
 	CONSTRAINT user_profile_email_key UNIQUE (email),
 	CONSTRAINT user_profile_pkey PRIMARY KEY (id)
 );

@@ -24,18 +24,12 @@ public class Session extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "user_profile_id", nullable = false)
     private UserProfile userProfile;
 
-    @Column(name = "user_profile_id")
-    private Long userProfileId;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutor_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "tutor_id", nullable = false)
     private Tutor tutor;
-
-    @Column(name = "tutor_id")
-    private Long tutorId;
 
     @Column(name = "room_id")
     private String roomId;

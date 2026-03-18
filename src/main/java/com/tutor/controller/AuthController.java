@@ -30,9 +30,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public GenericResponseEntity<UserProfile> register(
+    public GenericResponseEntity<UserProfileResponse> register(
             @Valid @RequestBody RegisterRequest request) {
-        UserProfile response = authService.register(request);
+        UserProfileResponse response = authService.register(request);
         return GenericResponseEntity.generateResponse(response);
     }
 

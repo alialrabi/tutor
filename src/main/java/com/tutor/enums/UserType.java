@@ -2,7 +2,7 @@ package com.tutor.enums;
 
 public enum UserType {
 
-    ONE(1), TWO(2);
+    STUDENT(1), TUTOR(2);
 
     private final int value;
 

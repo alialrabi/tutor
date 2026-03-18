@@ -14,7 +14,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user_profile", schema = "tutor")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -28,8 +29,8 @@ public class UserProfile extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "pass_word", nullable = true)
-    private String passWord;
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -43,7 +44,7 @@ public class UserProfile extends BaseEntity {
     @Column(nullable = false)
     private Long status = 0L;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "tutor",
         name = "user_roles",
@@ -60,11 +61,10 @@ public class UserProfile extends BaseEntity {
     @Column(name = "jwt_token")
     private String jwtToken;
 
-
     @Column(name = "image", columnDefinition = "bytea")
     private byte[] image;
 
-    @OneToOne(mappedBy = "userProfile")
+    @OneToOne(mappedBy = "user")
     private Tutor tutor;
 
     @Enumerated(EnumType.STRING)

@@ -1,10 +1,14 @@
 package com.tutor.business.service;
 
-import com.tutor.common.dto.AuthDto;
 import com.tutor.controller.request.RegisterRequest;
 import com.tutor.controller.response.AuthResponse;
 import com.tutor.controller.request.LoginRequest;
 import com.tutor.controller.response.UserProfileResponse;
+import com.tutor.enums.Provider;
+import com.tutor.enums.Roles;
+import com.tutor.exception.DataIntegrityException;
+import com.tutor.exception.EntityNotFoundException;
+import com.tutor.persistance.entity.Permission;
 import com.tutor.persistance.entity.Role;
 import com.tutor.persistance.entity.UserProfile;
 import com.tutor.persistance.repository.RoleRepository;
@@ -12,6 +16,7 @@ import com.tutor.persistance.repository.UserProfileRepository;
 import com.tutor.security.AppUserDetails;
 import com.tutor.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,30 +54,39 @@ public class AuthService {
 
 
     @Transactional
-    public UserProfile register(RegisterRequest request) {
-        if (userProfileRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered");
-        }
-
-        Set<Role> roles = new HashSet<>();
-
+    public UserProfileResponse register(RegisterRequest request) {
+        Role role = roleRepository.findByName(Roles.USER.name())
+                .orElseThrow(() -> new EntityNotFoundException("Role", "name", Roles.USER));
 
         UserProfile user = UserProfile.builder()
                 .email(request.getEmail())
-                .passWord(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(request.getPassword()))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .phoneNumber(request.getPhoneNumber())
+                .roles(Set.of(role))
                 .status(0L)
-                .roles(roles)
                 .userType(request.getUserType())
+                .provider(Provider.LOCAL)
                 .build();
 
         userProfileRepository.save(user);
 
-        AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
 
-        return user;
+        return UserProfileResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .image(user.getImage())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .status(user.getStatus())
+                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
+                .permissions(user.getRoles().stream()
+                        .flatMap(r-> r.getPermissions().stream())
+                        .map(Permission::getName)
+                        .collect(Collectors.toSet()))
+                .build();
     }
 
     @Transactional
@@ -113,15 +126,14 @@ public class AuthService {
         UserProfile user = userProfileRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<String> roles = user.getRoles().stream()
+        Set<String> roles = user.getRoles().stream()
                 .map(Role::getName)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        List<String> permissions = user.getRoles().stream()
+        Set<String> permissions = user.getRoles().stream()
                 .flatMap(r -> r.getPermissions().stream())
-                .map(p -> p.getName())
-                .distinct()
-                .collect(Collectors.toList());
+                .map(Permission::getName)
+                .collect(Collectors.toSet());
 
         return UserProfileResponse.builder()
                 .id(user.getId())
@@ -133,6 +145,7 @@ public class AuthService {
                 .status(user.getStatus())
                 .roles(roles)
                 .permissions(permissions)
+                .tutorId(user.getTutor() != null ? user.getTutor().getId() : null)
                 .build();
     }
 

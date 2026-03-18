@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class Role extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_seq")
@@ -28,22 +28,7 @@ public class Role {
     @Column(nullable = false)
     private Long status = 0L;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    @Column(name = "created_by")
-    private Long createdBy;
-
-    @Column(name = "updated_by")
-    private Long updatedBy;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "tutor",
         name = "role_permissions",

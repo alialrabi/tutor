@@ -3,10 +3,13 @@ package com.tutor.persistance.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "time_slot", schema = "tutor")
 public class TimeSlot extends AuditableEntity {

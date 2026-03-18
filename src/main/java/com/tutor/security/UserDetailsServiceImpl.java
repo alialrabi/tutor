@@ -22,10 +22,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public AppUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserProfile user = userProfileRepository.findByEmail(email)
+        UserProfile user = userProfileRepository.findByEmailWithRolesAndPermissionsAndTutor(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
+
         for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
             for (Permission permission : role.getPermissions()) {
