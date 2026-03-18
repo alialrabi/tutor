@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> , JpaSpecificationExecutor<UserProfile> {
     @Query("select u from UserProfile u left join fetch u.tutor where u.email = :email")
+    Optional<UserProfile> findByEmailWithTutor(String email);
+
     Optional<UserProfile> findByEmail(String email);
 
     boolean existsByEmail(String email);

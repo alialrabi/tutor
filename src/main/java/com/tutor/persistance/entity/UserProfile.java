@@ -67,11 +67,9 @@ public class UserProfile extends BaseEntity {
     @OneToOne(mappedBy = "user")
     private Tutor tutor;
 
-    @Enumerated(EnumType.STRING)
     @Convert(converter = UserTypeConverter.class)
     private UserType userType;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Convert(converter = ProviderConverter.class)
     private Provider provider;

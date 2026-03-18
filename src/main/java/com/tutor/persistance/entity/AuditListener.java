@@ -1,5 +1,6 @@
 package com.tutor.persistance.entity;
 
+import com.tutor.security.AppUserDetails;
 import com.tutor.security.SecurityUtil;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.PrePersist;
@@ -17,7 +18,7 @@ public class AuditListener {
             auditable.setCreatedAt(now);
             auditable.setUpdatedAt(now);
 
-            Long userId = SecurityUtil.getCurrentUserId();
+            Long userId = SecurityUtil.getCurrentData(AppUserDetails::getUserId);
 
             auditable.setCreatedBy(userId);
             auditable.setUpdatedBy(userId);
@@ -29,7 +30,7 @@ public class AuditListener {
         if (entity instanceof AuditableEntity auditable) {
             LocalDateTime now = LocalDateTime.now();
             auditable.setUpdatedAt(now);
-            Long userId = SecurityUtil.getCurrentUserId();
+            Long userId = SecurityUtil.getCurrentData(AppUserDetails::getUserId);
             auditable.setUpdatedBy(userId);
         }
 
@@ -38,8 +39,7 @@ public class AuditListener {
     @PreRemove
     public void preRemove(Object entity) {
         if (entity instanceof BaseEntity baseEntity) {
-            LocalDateTime now = LocalDateTime.now();
-            Long userId = SecurityUtil.getCurrentUserId();
+            baseEntity.setIsDeleted(true);
         }
     }
 }

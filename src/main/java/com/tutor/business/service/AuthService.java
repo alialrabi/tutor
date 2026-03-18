@@ -123,7 +123,7 @@ public class AuthService {
 
     @Transactional
     public UserProfileResponse getCurrentUser(String email) {
-        UserProfile user = userProfileRepository.findByEmail(email)
+        UserProfile user = userProfileRepository.findByEmailWithRolesAndPermissionsAndTutor(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Set<String> roles = user.getRoles().stream()

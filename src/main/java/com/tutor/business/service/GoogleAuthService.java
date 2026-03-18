@@ -105,7 +105,6 @@ public class GoogleAuthService {
         }
     }
 
-    // ✅ synchronized to prevent duplicate users on concurrent requests
     private synchronized UserProfile createGoogleUser(GoogleIdToken.Payload payload) {
         // double-check inside lock in case another thread already created it
         return UserProfile.builder()

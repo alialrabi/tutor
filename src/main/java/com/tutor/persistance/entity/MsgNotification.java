@@ -32,4 +32,7 @@ public class MsgNotification {
     @Column(name = "body", columnDefinition = "TEXT")
     private String body;
 
+    @Column(name = "is_sent", nullable = false)
+    private Boolean isSent;
+
 }
