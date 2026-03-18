@@ -1,5 +1,8 @@
 package com.tutor.common;
 
+import com.tutor.business.service.MsgNotificationService;
+import com.tutor.business.usecase.MsgNotificationUseCaseImpl;
+import com.tutor.persistance.entity.MsgNotification;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -31,9 +34,12 @@ public class MessageServiceImpl implements MessageService {
     @Value("${mail.smtp.starttls.enable}")
     private String starttls;
 
-    public Boolean sendNotification( String to, String subject, String body){
+    private MsgNotificationUseCaseImpl msgNotificationUseCase;
+    public Boolean sendNotification(String to, String subject, String body){
         log.info("send Notification message to: {}", to);
+
         Properties props = new Properties();
+
         props.put("mail.smtp.auth", auth);
         props.put("mail.smtp.starttls.enable", starttls);
         props.put("mail.smtp.host", host);
@@ -45,6 +51,8 @@ public class MessageServiceImpl implements MessageService {
                         return new PasswordAuthentication(username, password);
                     }
                 });
+
+        boolean isSent = false;
 
         try {
 
@@ -58,13 +66,13 @@ public class MessageServiceImpl implements MessageService {
             message.setText(body);
 
             Transport.send(message);
-            log.info("Message sent successfully");
-
+            isSent = true;
+            log.info("Message sent successfully to: {}", to);
         } catch (MessagingException e) {
-            log.error("Error in sending email", e.getMessage());
+            log.error("Filed to send email to: {}", to, e);
+        } finally {
+            msgNotificationUseCase.create(isSent, to, subject, body);
         }
-
-        return true;
+        return isSent;
     }
-
 }
