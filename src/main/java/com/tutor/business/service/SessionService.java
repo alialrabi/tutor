@@ -7,8 +7,13 @@ import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.controller.request.SessionRequest;
 import com.tutor.exception.BusinessException;
+import com.tutor.exception.EntityNotFoundException;
 import com.tutor.persistance.entity.Session;
+import com.tutor.persistance.entity.Tutor;
+import com.tutor.persistance.entity.UserProfile;
 import com.tutor.persistance.repository.SessionRepository;
+import com.tutor.persistance.repository.TutorRepository;
+import com.tutor.persistance.repository.UserProfileRepository;
 import com.tutor.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,8 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final CommonCriteria commonCriteria;
     private final SessionMapper sessionMapper;
+    private final TutorRepository tutorRepository;
+    private final UserProfileRepository userProfileRepository;
 
     public ResponseDataModel<SessionDto> findAll(SearchRequest searchRequest) {
         return commonCriteria.findAll(sessionRepository, searchRequest, sessionMapper::toDto);
@@ -46,12 +53,23 @@ public class SessionService {
         log.info("Create session for tutor id {} and user id {}",
                 sessionRequest.getTutorId(), userDetails.getUserId());
         Session session = new Session();
-        session.setUserProfileId(userDetails.getUserId());
-        session.setTutorId(sessionRequest.getTutorId());
+
+        Tutor tutor = tutorRepository.findById(sessionRequest.getTutorId())
+                .orElseThrow(() -> new EntityNotFoundException("Tutor", "id", sessionRequest.getTutorId()));
+
+        UserProfile userProfile = userProfileRepository.findById(sessionRequest.getTutorId())
+                .orElseThrow(() -> new EntityNotFoundException("Tutor", "id", sessionRequest.getTutorId()));
+
+
+        session.setTutor(tutor);
+
         session.setDate(sessionRequest.getDate());
         session.setStartTime(sessionRequest.getStartTime());
         session.setEndTime(sessionRequest.getEndTime());
         Session savedSession = sessionRepository.save(session);
+
+        session.setUserProfile(userProfile);
+
         return sessionMapper.toDto(savedSession);
     }
 

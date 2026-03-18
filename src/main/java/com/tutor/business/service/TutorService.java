@@ -6,15 +6,21 @@ import com.tutor.common.dto.AuthDto;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.business.dto.TutorDto;
 import com.tutor.common.dto.ResponseDataModel;
+import com.tutor.enums.Roles;
+import com.tutor.enums.UserType;
 import com.tutor.exception.BusinessException;
+import com.tutor.exception.EntityNotFoundException;
+import com.tutor.persistance.entity.Role;
 import com.tutor.persistance.entity.Tutor;
 import com.tutor.persistance.entity.UserProfile;
+import com.tutor.persistance.repository.RoleRepository;
 import com.tutor.persistance.repository.TutorRepository;
 import com.tutor.persistance.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +28,7 @@ public class TutorService  {
     private final TutorRepository tutorRepository;
     private final CommonCriteria commonCriteria;
     private final TutorMapper tutorMapper;
+    private final RoleRepository roleRepository;
 
     private final UserProfileRepository userProfileRepository;
 
@@ -42,7 +49,14 @@ public class TutorService  {
             throw new BusinessException("Tutor profile already exists for this user");
         }
 
+        userProfile.setUserType(UserType.TUTOR);
+
+        Role role = roleRepository.findByName(Roles.TUTOR.name()).orElseThrow(() -> new EntityNotFoundException("Role", "name", Roles.TUTOR));
+
+        userProfile.setRoles(Set.of(role));
+
         Tutor tutor = tutorMapper.toEntity(request);
+
         tutor.setUser(userProfile);
         
         tutor.setNumberOfSessions(0);

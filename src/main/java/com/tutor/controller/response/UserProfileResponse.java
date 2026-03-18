@@ -14,8 +14,9 @@ public class UserProfileResponse {
     private String lastName;
     private String phoneNumber;
     private Long status;
-    private java.util.List<String> roles;
-    private java.util.List<String> permissions;
+    private java.util.Set<String> roles;
+    private java.util.Set<String> permissions;
     private byte[] image;
+    private Long tutorId;
 }
 
