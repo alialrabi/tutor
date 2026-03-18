@@ -13,13 +13,11 @@ import java.time.LocalDateTime;
 @Data
 @MappedSuperclass
 public abstract class BaseEntity extends AuditableEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "deleted_at", nullable = false)
-    private LocalDateTime deletedAt = LocalDateTime.now();
+    @Column(name = "status")
+    private Long status;
 
-    @Column(name = "deleted_by")
-    private Long deletedBy;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
 }

@@ -11,6 +11,33 @@ CREATE SEQUENCE tutor.categories_seq
 	START 1
 	CACHE 1
 	NO CYCLE;
+-- DROP SEQUENCE tutor.comment_id_seq;
+
+CREATE SEQUENCE tutor.comment_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.lu_languages_id_seq;
+
+CREATE SEQUENCE tutor.lu_languages_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.msg_notification_seq;
+
+CREATE SEQUENCE tutor.msg_notification_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
 -- DROP SEQUENCE tutor.permissions_seq;
 
 CREATE SEQUENCE tutor.permissions_seq
@@ -91,9 +118,51 @@ CREATE SEQUENCE tutor.users_seq
 CREATE TABLE tutor.categories (
 	id int8 DEFAULT nextval('tutor.categories_seq'::regclass) NOT NULL,
 	"name" varchar(255) NOT NULL,
-	deleted_at timestamp(6) NULL,
-	deleted_by int8 NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
 	CONSTRAINT categories_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.lu_languages definition
+
+-- Drop table
+
+-- DROP TABLE tutor.lu_languages;
+
+CREATE TABLE tutor.lu_languages (
+	id bigserial NOT NULL,
+	name_ar varchar(255) NOT NULL,
+	name_en varchar(255) NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	CONSTRAINT lu_languages_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.msg_notification definition
+
+-- Drop table
+
+-- DROP TABLE tutor.msg_notification;
+
+CREATE TABLE tutor.msg_notification (
+	id int8 DEFAULT nextval('tutor.msg_notification_seq'::regclass) NOT NULL,
+	sender_email varchar(255) NOT NULL,
+	receiver_email varchar(255) NOT NULL,
+	subject varchar(500) NULL,
+	body text NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	CONSTRAINT msg_notification_pkey PRIMARY KEY (id)
 );
 
 
@@ -108,11 +177,11 @@ CREATE TABLE tutor.permissions (
 	"name" varchar(100) NOT NULL,
 	description varchar(255) NULL,
 	status int8 DEFAULT 0 NOT NULL,
-	deleted_at timestamp NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	created_by int8 NULL,
 	updated_by int8 NULL,
+	is_deleted bool NULL,
 	CONSTRAINT permissions_name_key UNIQUE (name),
 	CONSTRAINT permissions_pkey PRIMARY KEY (id)
 );
@@ -129,11 +198,11 @@ CREATE TABLE tutor.roles (
 	"name" varchar(50) NOT NULL,
 	description varchar(255) NULL,
 	status int8 DEFAULT 0 NOT NULL,
-	deleted_at timestamp NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	created_by int8 NULL,
 	updated_by int8 NULL,
+	is_deleted bool NULL,
 	CONSTRAINT roles_name_key UNIQUE (name),
 	CONSTRAINT roles_pkey PRIMARY KEY (id)
 );
@@ -153,16 +222,20 @@ CREATE TABLE tutor.user_profile (
 	last_name varchar(100) NOT NULL,
 	phone_number varchar(20) NOT NULL,
 	status int8 DEFAULT 0 NOT NULL,
-	deleted_at timestamp NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	created_by int8 NULL,
 	updated_by int8 NULL,
 	jwt_token varchar(1000) NULL,
-	deleted_by int8 NULL,
 	image bytea NULL,
+	enabled bool NULL,
+	user_type varchar(255) DEFAULT student 1, tutor 2 NULL,
+	provider varchar NULL,
+	"password" varchar(255) NULL,
+	is_deleted bool NULL,
 	CONSTRAINT user_profile_email_key UNIQUE (email),
-	CONSTRAINT user_profile_pkey PRIMARY KEY (id)
+	CONSTRAINT user_profile_pkey PRIMARY KEY (id),
+	CONSTRAINT user_profile_user_type_check CHECK (((user_type)::text = ANY ((ARRAY['ONE'::character varying, 'TWO'::character varying])::text[])))
 );
 
 
@@ -176,8 +249,8 @@ CREATE TABLE tutor.role_permissions (
 	role_id int8 NOT NULL,
 	permission_id int8 NOT NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	deleted_at timestamp NULL,
 	created_by int8 NULL,
+	is_deleted bool NULL,
 	CONSTRAINT role_permissions_pk PRIMARY KEY (role_id, permission_id),
 	CONSTRAINT role_permissions_permission_fk FOREIGN KEY (permission_id) REFERENCES tutor.permissions(id) ON DELETE CASCADE,
 	CONSTRAINT role_permissions_role_fk FOREIGN KEY (role_id) REFERENCES tutor.roles(id) ON DELETE CASCADE
@@ -201,7 +274,6 @@ CREATE TABLE tutor.tutors (
 	rating numeric(3, 2) DEFAULT 0 NULL,
 	total_reviews int4 DEFAULT 0 NULL,
 	status int8 DEFAULT 0 NOT NULL,
-	deleted_at timestamp NULL,
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	created_by int8 NULL,
@@ -210,6 +282,8 @@ CREATE TABLE tutor.tutors (
 	video_id varchar NULL,
 	image bytea NULL,
 	category_id int8 NULL,
+	title varchar NULL,
+	is_deleted bool NULL,
 	CONSTRAINT tutors_pkey PRIMARY KEY (id),
 	CONSTRAINT tutors_user_id_key UNIQUE (user_id),
 	CONSTRAINT fk_tutor_category FOREIGN KEY (category_id) REFERENCES tutor.categories(id) ON DELETE SET NULL,
@@ -232,6 +306,29 @@ CREATE TABLE tutor.user_roles (
 	CONSTRAINT user_roles_pkey PRIMARY KEY (user_id, role_id),
 	CONSTRAINT user_roles_role_fk FOREIGN KEY (role_id) REFERENCES tutor.roles(id) ON DELETE CASCADE,
 	CONSTRAINT user_roles_user_fk FOREIGN KEY (user_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE
+);
+
+
+-- tutor."comments" definition
+
+-- Drop table
+
+-- DROP TABLE tutor."comments";
+
+CREATE TABLE tutor."comments" (
+	id int8 DEFAULT nextval('tutor.comment_id_seq'::regclass) NOT NULL,
+	"content" text NOT NULL,
+	tutor_id int8 NOT NULL,
+	user_profile_id int8 NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	CONSTRAINT comments_pkey PRIMARY KEY (id),
+	CONSTRAINT fk_comments_tutor FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE,
+	CONSTRAINT fk_comments_user_profile FOREIGN KEY (user_profile_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE
 );
 
 
