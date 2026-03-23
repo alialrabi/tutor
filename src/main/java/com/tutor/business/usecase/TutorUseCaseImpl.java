@@ -6,10 +6,11 @@ import com.tutor.business.dto.TutorDto;
 import com.tutor.business.service.TutorService;
 import com.tutor.common.dto.ResponseDataModel;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TutorUseCaseImpl implements TutorUseCase {
 
     private  final TutorService tutorService;

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class MsgNotificationService {
@@ -24,5 +26,9 @@ public class MsgNotificationService {
         notification.setSenderEmail(SecurityUtil.getCurrentData(AppUserDetails::getEmail));
         notification.setSubject(subject);
         msgNotificationRepository.save(notification);
+    }
+
+    public List<MsgNotification> getAllMessages(Boolean isSent) {
+        return msgNotificationRepository.findByIsSent(isSent);
     }
 }

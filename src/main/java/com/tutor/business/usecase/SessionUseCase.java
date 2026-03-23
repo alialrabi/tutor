@@ -19,5 +19,4 @@ public interface SessionUseCase {
     List<SessionDto> findByUserProfileId(Long userProfileId);
     List<SessionDto> findByTutorId(Long tutorId);
     String goRoom(RoomRequest roomRequest);
-
 }

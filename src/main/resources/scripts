@@ -380,3 +380,6 @@ CREATE TABLE tutor.time_slot (
 	CONSTRAINT time_slot_pkey PRIMARY KEY (id),
 	CONSTRAINT time_slot_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE
 );
+
+alter table tutor.msg_notification
+add column is_sent bool not null default false
