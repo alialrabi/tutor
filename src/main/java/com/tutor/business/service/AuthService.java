@@ -55,16 +55,12 @@ public class AuthService {
 
     @Transactional
     public UserProfileResponse register(RegisterRequest request) {
-        Role role = roleRepository.findByName(Roles.USER.name())
-                .orElseThrow(() -> new EntityNotFoundException("Role", "name", Roles.USER));
-
         UserProfile user = UserProfile.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .phoneNumber(request.getPhoneNumber())
-                .roles(Set.of(role))
                 .status(0L)
                 .userType(request.getUserType())
                 .provider(Provider.LOCAL)
@@ -81,11 +77,6 @@ public class AuthService {
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .status(user.getStatus())
-                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
-                .permissions(user.getRoles().stream()
-                        .flatMap(r-> r.getPermissions().stream())
-                        .map(Permission::getName)
-                        .collect(Collectors.toSet()))
                 .build();
     }
 
