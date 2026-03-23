@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface TutorRepository extends JpaRepository<Tutor, Long>, JpaSpecificationExecutor<Tutor> {
-    Optional<Tutor> findByUser(UserProfile user);
+    Optional<Tutor> findByUserProfile(UserProfile user);
 }

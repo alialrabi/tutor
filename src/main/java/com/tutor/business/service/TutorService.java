@@ -45,7 +45,7 @@ public class TutorService  {
         UserProfile userProfile = userProfileRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BusinessException("user with email is not found"));
 
-        if (tutorRepository.findByUser(userProfile).isPresent()) {
+        if (tutorRepository.findByUserProfile(userProfile).isPresent()) {
             throw new BusinessException("Tutor profile already exists for this user");
         }
 
@@ -53,7 +53,7 @@ public class TutorService  {
 
         Tutor tutor = tutorMapper.toEntity(request);
 
-        tutor.setUser(userProfile);
+        tutor.setUserProfile(userProfile);
         
         tutor.setNumberOfSessions(0);
         tutor.setRating(BigDecimal.ZERO);

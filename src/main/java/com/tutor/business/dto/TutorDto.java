@@ -1,7 +1,6 @@
 package com.tutor.business.dto;
 
 import com.tutor.common.dto.BaseDto;
-import com.tutor.persistance.entity.UserProfile;
 import lombok.Data;
 
 import java.math.BigDecimal;

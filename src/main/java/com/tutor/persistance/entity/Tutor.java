@@ -32,7 +32,7 @@ public class Tutor {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile user;
+    private UserProfile userProfile;
 
     @Column(name = "title")
     private String title;
@@ -67,7 +67,7 @@ public class Tutor {
     @Column(name = "video_id")
     private String videoId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
