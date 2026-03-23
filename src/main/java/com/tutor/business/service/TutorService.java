@@ -18,7 +18,9 @@ import com.tutor.persistance.repository.TutorRepository;
 import com.tutor.persistance.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -41,7 +43,7 @@ public class TutorService  {
                 .orElseThrow(()-> new BusinessException("Tutor not found")));
     }
 
-    public TutorDto save(AuthDto.TutorRegisterRequest request) {
+    public TutorDto save(AuthDto.TutorRegisterRequest request, MultipartFile file) throws IOException {
         UserProfile userProfile = userProfileRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BusinessException("user with email is not found"));
 
@@ -51,10 +53,13 @@ public class TutorService  {
 
         userProfile.setUserType(UserType.TUTOR);
 
+        userProfile.setImage(file.getBytes());
+
         Tutor tutor = tutorMapper.toEntity(request);
 
         tutor.setUser(userProfile);
-        
+
+        tutor.setTitle(request.getTitle());
         tutor.setNumberOfSessions(0);
         tutor.setRating(BigDecimal.ZERO);
         tutor.setTotalReviews(0);
