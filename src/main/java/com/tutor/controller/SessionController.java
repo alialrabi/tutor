@@ -2,6 +2,7 @@ package com.tutor.controller;
 
 import com.tutor.business.dto.SessionDto;
 import com.tutor.business.usecase.SessionUseCase;
+import com.tutor.common.MessageService;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
@@ -9,6 +10,7 @@ import com.tutor.controller.request.SessionRequest;
 import com.tutor.security.AppUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,4 +61,5 @@ public class SessionController {
         List<SessionDto> data = sessionUseCase.findByTutorId(tutorId);
         return GenericResponseEntity.generateResponse(data);
     }
+
 }
