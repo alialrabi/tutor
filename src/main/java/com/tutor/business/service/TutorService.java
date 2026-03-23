@@ -51,10 +51,6 @@ public class TutorService  {
 
         userProfile.setUserType(UserType.TUTOR);
 
-        Role role = roleRepository.findByName(Roles.TUTOR.name()).orElseThrow(() -> new EntityNotFoundException("Role", "name", Roles.TUTOR));
-
-        userProfile.setRoles(Set.of(role));
-
         Tutor tutor = tutorMapper.toEntity(request);
 
         tutor.setUser(userProfile);
