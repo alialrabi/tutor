@@ -58,7 +58,7 @@ public class TutorService  {
         tutor.setNumberOfSessions(0);
         tutor.setRating(BigDecimal.ZERO);
         tutor.setTotalReviews(0);
-        tutor.setStatus(0L); // 0L for PENDING or similar status
+        tutor.setStatus(0); // 0L for PENDING or similar status
 
         return tutorMapper.toDto(tutorRepository.save(tutor));
     }

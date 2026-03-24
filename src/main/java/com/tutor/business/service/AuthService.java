@@ -55,29 +55,28 @@ public class AuthService {
 
     @Transactional
     public UserProfileResponse register(RegisterRequest request) {
-        UserProfile user = UserProfile.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .phoneNumber(request.getPhoneNumber())
-                .status(0L)
-                .userType(request.getUserType())
-                .provider(Provider.LOCAL)
-                .build();
+        UserProfile user = new UserProfile();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setStatus(0);
+        user.setUserType(request.getUserType());
+        user.setProvider(Provider.LOCAL);
 
         userProfileRepository.save(user);
 
 
-        return UserProfileResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .image(user.getImage())
-                .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
-                .status(user.getStatus())
-                .build();
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setImage(user.getImage());
+        response.setLastName(user.getLastName());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setStatus(user.getStatus());
+        return response;
     }
 
     @Transactional
@@ -126,18 +125,18 @@ public class AuthService {
                 .map(Permission::getName)
                 .collect(Collectors.toSet());
 
-        return UserProfileResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .image(user.getImage())
-                .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
-                .status(user.getStatus())
-                .roles(roles)
-                .permissions(permissions)
-                .tutorId(user.getTutor() != null ? user.getTutor().getId() : null)
-                .build();
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setImage(user.getImage());
+        response.setLastName(user.getLastName());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setStatus(user.getStatus());
+        response.setRoles(roles);
+        response.setPermissions(permissions);
+        response.setTutorId(user.getTutor() != null ? user.getTutor().getId() : null);
+        return response;
     }
 
     private AuthResponse buildAuthResponse(String token, UserProfile user) {

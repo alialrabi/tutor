@@ -15,9 +15,9 @@ public class TutorDto extends BaseDto {
     private BigDecimal hourlyRate;
     private Boolean acceptsOneToOne = true;
     private Boolean acceptsOneToMany = false;
-    private BigDecimal rating = BigDecimal.ZERO;
-    private Integer totalReviews = 0;
-    private Long status = 0L;
+    private BigDecimal rating;
+    private Integer totalReviews;
+    private Long status;
     private Integer numberOfSessions;
     private String videoId;
     private Long categoryId;

@@ -25,9 +25,6 @@ public class Role extends BaseEntity {
     @Column(length = 255)
     private String description;
 
-    @Column(nullable = false)
-    private Long status = 0L;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "tutor",

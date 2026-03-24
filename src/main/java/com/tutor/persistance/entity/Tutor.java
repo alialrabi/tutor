@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tutor {
+public class Tutor extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tutor_seq_gen")
@@ -57,9 +57,6 @@ public class Tutor {
 
     @Column(name = "total_reviews")
     private Integer totalReviews = 0;
-
-    @Column(nullable = false)
-    private Long status = 0L;
 
     @Column(name = "no_of_sessions")
     private Integer numberOfSessions;

@@ -41,9 +41,6 @@ public class UserProfile extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private Long status = 0L;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "tutor",

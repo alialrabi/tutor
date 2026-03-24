@@ -6,6 +6,7 @@ import com.tutor.common.CommonCriteria;
 import com.tutor.common.dto.ResponseDataModel;
 import com.tutor.common.dto.SearchRequest;
 import com.tutor.controller.request.SessionRequest;
+import com.tutor.enums.SessionStatusEnum;
 import com.tutor.exception.BusinessException;
 import com.tutor.exception.EntityNotFoundException;
 import com.tutor.persistance.entity.Session;
@@ -55,21 +56,21 @@ public class SessionService {
                 sessionRequest.getTutorId(), userDetails.getUserId());
         Session session = new Session();
 
-        Tutor tutor = tutorRepository.findById(sessionRequest.getTutorId())
+       /* Tutor tutor = tutorRepository.findById(sessionRequest.getTutorId())
                 .orElseThrow(() -> new EntityNotFoundException("Tutor", "id", sessionRequest.getTutorId()));
 
         UserProfile userProfile = userProfileRepository.findById(sessionRequest.getTutorId())
                 .orElseThrow(() -> new EntityNotFoundException("Tutor", "id", sessionRequest.getTutorId()));
+*/
 
-
-        session.setTutor(tutor);
+        session.setTutorId(sessionRequest.getTutorId());
 
         session.setDate(sessionRequest.getDate());
         session.setStartTime(sessionRequest.getStartTime());
         session.setEndTime(sessionRequest.getEndTime());
+        session.setUserProfileId(userDetails.getUserId());
+        session.setStatus(SessionStatusEnum.RESERVED.getValue());
         Session savedSession = sessionRepository.save(session);
-
-        session.setUserProfile(userProfile);
 
         return sessionMapper.toDto(savedSession);
     }
