@@ -8,6 +8,9 @@ import com.tutor.common.dto.ResponseDataModel;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +28,7 @@ public class TutorUseCaseImpl implements TutorUseCase {
     }
 
     @Override
-    public TutorDto save(AuthDto.TutorRegisterRequest request) {
-        return tutorService.save(request);
+    public TutorDto save(AuthDto.TutorRegisterRequest request, MultipartFile file) throws IOException {
+        return tutorService.save(request, file);
     }
 }

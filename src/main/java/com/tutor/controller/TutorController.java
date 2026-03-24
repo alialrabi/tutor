@@ -9,6 +9,9 @@ import com.tutor.common.dto.ResponseDataModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/tutors")
@@ -29,7 +32,8 @@ public class TutorController {
     }
 
     @PostMapping
-    public GenericResponseEntity<TutorDto> save(@RequestBody @Valid AuthDto.TutorRegisterRequest request) {
-        return GenericResponseEntity.generateResponse(tutorUseCase.save(request));
+    public GenericResponseEntity<TutorDto> save(@RequestPart @Valid AuthDto.TutorRegisterRequest request,
+                                                @RequestPart("file") MultipartFile file) throws IOException {
+        return GenericResponseEntity.generateResponse(tutorUseCase.save(request, file));
     }
 }

@@ -77,6 +77,10 @@ public class AuthDto {
         @NotBlank @Email
         private String email;
 
+        @NotNull
+        @NotBlank
+        private String title;
+
         @NotBlank
         private String bio;
 
@@ -91,7 +95,6 @@ public class AuthDto {
         private Boolean acceptsOneToMany = false;
         private String videoId;
 
-        private byte[] image;
     }
 
     @Getter
