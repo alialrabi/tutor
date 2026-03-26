@@ -41,9 +41,6 @@ public class UserProfile extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private Long status = 0L;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "tutor",
@@ -64,7 +61,7 @@ public class UserProfile extends BaseEntity {
     @Column(name = "image", columnDefinition = "bytea")
     private byte[] image;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "userProfile")
     private Tutor tutor;
 
     @Convert(converter = UserTypeConverter.class)

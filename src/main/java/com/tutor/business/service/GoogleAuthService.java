@@ -106,14 +106,12 @@ public class GoogleAuthService {
     }
 
     private synchronized UserProfile createGoogleUser(GoogleIdToken.Payload payload) {
-        // double-check inside lock in case another thread already created it
-        return UserProfile.builder()
-                        .email(payload.getEmail())
-                        .firstName((String) payload.get("given_name"))
-                        .lastName((String) payload.get("family_name"))
-                        .provider(Provider.GOOGLE)
-                        .enabled(true)
-                        .status(0L)
-                        .build();
+        UserProfile user = new UserProfile();
+        user.setEmail(payload.getEmail());
+        user.setFirstName((String) payload.get("given_name"));
+        user.setLastName((String) payload.get("family_name"));
+        user.setProvider(Provider.GOOGLE);
+        user.setEnabled(true);
+        return user;
     }
 }

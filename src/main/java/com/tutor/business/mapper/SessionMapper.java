@@ -7,9 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {TimeSlotMapper.class})
 public interface SessionMapper {
-    @Mapping(source = "tutor.id", target = "tutorId")
     SessionDto toDto(Session session);
-
-    @Mapping(source = "tutorId", target = "tutor.id")
     Session toEntity(SessionDto sessionDto);
 }

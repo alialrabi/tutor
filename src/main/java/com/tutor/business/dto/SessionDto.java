@@ -19,6 +19,7 @@ import java.util.List;
 public class SessionDto {
     private Long id;
     private Long tutorId;
+    private Long userProfileId;
     private TutorDto tutor;
     private UserDto userProfile;
     private String roomId;

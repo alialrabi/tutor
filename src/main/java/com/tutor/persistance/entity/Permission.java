@@ -23,6 +23,4 @@ public class Permission extends BaseEntity {
     @Column(length = 255)
     private String description;
 
-    @Column(nullable = false)
-    private Long status = 0L;
 }

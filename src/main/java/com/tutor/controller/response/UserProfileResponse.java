@@ -13,7 +13,7 @@ public class UserProfileResponse {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Long status;
+    private Integer status;
     private java.util.Set<String> roles;
     private java.util.Set<String> permissions;
     private byte[] image;
