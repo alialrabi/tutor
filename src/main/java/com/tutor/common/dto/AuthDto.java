@@ -99,6 +99,29 @@ public class AuthDto {
 
     @Getter
     @Setter
+    public static class TutorUpdateRequest {
+        @NotNull
+        @NotBlank
+        private String title;
+
+        @NotBlank
+        private String bio;
+
+        @NotNull
+        private Integer experienceYears;
+
+        @NotNull
+        private BigDecimal hourlyRate;
+
+        private Boolean acceptsOneToOne = true;
+
+        private Boolean acceptsOneToMany = false;
+        private String videoId;
+
+    }
+
+    @Getter
+    @Setter
     public static class UploadPhotoRequest {
         @NotBlank
         @NotNull

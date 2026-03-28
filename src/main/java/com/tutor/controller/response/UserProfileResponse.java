@@ -1,5 +1,6 @@
 package com.tutor.controller.response;
 
+import com.tutor.enums.UserType;
 import lombok.*;
 
 @Getter
@@ -18,5 +19,6 @@ public class UserProfileResponse {
     private java.util.Set<String> permissions;
     private byte[] image;
     private Long tutorId;
+    private UserType userType;
 }
 

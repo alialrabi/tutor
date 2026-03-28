@@ -6,6 +6,7 @@ import com.tutor.business.dto.TutorDto;
 import com.tutor.business.usecase.TutorUseCase;
 import com.tutor.common.dto.GenericResponseEntity;
 import com.tutor.common.dto.ResponseDataModel;
+import com.tutor.controller.request.RateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,17 @@ public class TutorController {
     public GenericResponseEntity<TutorDto> save(@RequestPart @Valid AuthDto.TutorRegisterRequest request,
                                                 @RequestPart("file") MultipartFile file) throws IOException {
         return GenericResponseEntity.generateResponse(tutorUseCase.save(request, file));
+    }
+
+    @PutMapping("/{id}")
+    public GenericResponseEntity<TutorDto> update(
+            @PathVariable Long id,
+            @RequestBody @Valid AuthDto.TutorUpdateRequest request) throws IOException {
+        return GenericResponseEntity.generateResponse(tutorUseCase.update(id, request));
+    }
+
+    @PutMapping("/rate/{id}")
+    public void rateTutor(@PathVariable Long id, @RequestBody RateRequest request) {
+        tutorUseCase.rateTutor(id, request);
     }
 }

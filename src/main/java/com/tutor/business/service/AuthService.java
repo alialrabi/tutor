@@ -136,6 +136,7 @@ public class AuthService {
         response.setRoles(roles);
         response.setPermissions(permissions);
         response.setTutorId(user.getTutor() != null ? user.getTutor().getId() : null);
+        response.setUserType(user.getUserType());
         return response;
     }
 
