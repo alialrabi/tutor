@@ -1,24 +1,33 @@
 package com.tutor.business.service;
 
-import com.tutor.common.dto.AuthDto;
+import com.tutor.controller.request.RegisterRequest;
+import com.tutor.controller.response.AuthResponse;
+import com.tutor.controller.request.LoginRequest;
+import com.tutor.controller.response.UserProfileResponse;
+import com.tutor.enums.Provider;
+import com.tutor.enums.Roles;
+import com.tutor.exception.DataIntegrityException;
+import com.tutor.exception.EntityNotFoundException;
+import com.tutor.persistance.entity.Permission;
 import com.tutor.persistance.entity.Role;
 import com.tutor.persistance.entity.UserProfile;
 import com.tutor.persistance.repository.RoleRepository;
 import com.tutor.persistance.repository.UserProfileRepository;
+import com.tutor.security.AppUserDetails;
 import com.tutor.security.JwtService;
-import com.tutor.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,39 +43,44 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
+    @Transactional(rollbackFor = IOException.class)
+    public String uploadPhoto(String email, MultipartFile file) throws IOException {
+        UserProfile user = userProfileRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setImage(file.getBytes());
+        userProfileRepository.save(user);
+        return "Success";
+    }
+
+
     @Transactional
-    public AuthDto.AuthResponse register(AuthDto.RegisterRequest request) {
-        if (userProfileRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered");
-        }
-
-        Set<Role> roles = new HashSet<>();
-        String roleName = request.getRole() != null ? request.getRole().toUpperCase() : "STUDENT";
-        roleRepository.findByName(roleName).ifPresent(roles::add);
-        if (roles.isEmpty()) {
-            roleRepository.findByName("STUDENT").ifPresent(roles::add);
-        }
-
-        UserProfile user = UserProfile.builder()
-                .email(request.getEmail())
-                .passWord(passwordEncoder.encode(request.getPassword()))
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .phoneNumber(request.getPhoneNumber())
-                .status(0L)
-                .roles(roles)
-                .build();
+    public UserProfileResponse register(RegisterRequest request) {
+        UserProfile user = new UserProfile();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setStatus(0);
+        user.setUserType(request.getUserType());
+        user.setProvider(Provider.LOCAL);
 
         userProfileRepository.save(user);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        String token = jwtService.generateToken(userDetails);
 
-        return buildAuthResponse(token, user);
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setImage(user.getImage());
+        response.setLastName(user.getLastName());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setStatus(user.getStatus());
+        return response;
     }
 
     @Transactional
-    public AuthDto.AuthResponse login(AuthDto.LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -74,68 +88,69 @@ public class AuthService {
         UserProfile user = userProfileRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        String token = jwtService.generateToken(userDetails);
+        AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
+        List<String> permissions = loadPermissions(user.getId());
+
+        String token = jwtService.generateToken(userDetails, permissions);
 
         user.setJwtToken(token);
 
         return buildAuthResponse(token, user);
     }
 
-    public AuthDto.UserProfileResponse getCurrentUser(String email) {
-        UserProfile user = userProfileRepository.findByEmail(email)
+    public List<String> loadPermissions(Long userId) {
+        UserProfile user = userProfileRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<String> roles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
-
         List<String> permissions = user.getRoles().stream()
                 .flatMap(r -> r.getPermissions().stream())
                 .map(p -> p.getName())
                 .distinct()
                 .collect(Collectors.toList());
 
-        return AuthDto.UserProfileResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
-                .status(user.getStatus())
-                .roles(roles)
-                .permissions(permissions)
-                .build();
+        return permissions;
     }
 
-    private AuthDto.AuthResponse buildAuthResponse(String token, UserProfile user) {
-        List<String> roles = user.getRoles().stream()
+    @Transactional
+    public UserProfileResponse getCurrentUser(String email) {
+        UserProfile user = userProfileRepository.findByEmailWithRolesAndPermissionsAndTutor(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Set<String> roles = user.getRoles().stream()
                 .map(Role::getName)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        List<String> permissions = user.getRoles().stream()
+        Set<String> permissions = user.getRoles().stream()
                 .flatMap(r -> r.getPermissions().stream())
-                .map(p -> p.getName())
-                .distinct()
-                .collect(Collectors.toList());
+                .map(Permission::getName)
+                .collect(Collectors.toSet());
 
-        return AuthDto.AuthResponse.builder()
+        UserProfileResponse response = new UserProfileResponse();
+        response.setId(user.getId());
+        response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setImage(user.getImage());
+        response.setLastName(user.getLastName());
+        response.setPhoneNumber(user.getPhoneNumber());
+        response.setStatus(user.getStatus());
+        response.setRoles(roles);
+        response.setPermissions(permissions);
+        response.setTutorId(user.getTutor() != null ? user.getTutor().getId() : null);
+        return response;
+    }
+
+    private AuthResponse buildAuthResponse(String token, UserProfile user) {
+        return AuthResponse.builder()
                 .token(token)
                 .tokenType("Bearer")
-                .userId(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .roles(roles)
-                .permissions(permissions)
                 .build();
     }
 
     public void logout() {
-        Object principal = (UserDetailsImpl) SecurityContextHolder
+        Object principal = (AppUserDetails) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetailsImpl userDetails) {
+        if (principal instanceof AppUserDetails userDetails) {
             String email = userDetails.getEmail();
             UserProfile user = userProfileRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found"));

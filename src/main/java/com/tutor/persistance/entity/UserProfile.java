@@ -1,18 +1,25 @@
 package com.tutor.persistance.entity;
 
+import com.tutor.common.ProviderConverter;
+import com.tutor.common.UserTypeConverter;
+import com.tutor.enums.Provider;
+import com.tutor.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.security.AuthProvider;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "user_profile", schema = "tutor")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserProfile extends AuditableEntity {
+public class UserProfile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
@@ -22,8 +29,8 @@ public class UserProfile extends AuditableEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "pass_word", nullable = false)
-    private String passWord;
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -31,16 +38,10 @@ public class UserProfile extends AuditableEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private Long status = 0L;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         schema = "tutor",
         name = "user_roles",
@@ -51,6 +52,22 @@ public class UserProfile extends AuditableEntity {
     @EqualsAndHashCode.Exclude
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
     @Column(name = "jwt_token")
     private String jwtToken;
+
+    @Column(name = "image", columnDefinition = "bytea")
+    private byte[] image;
+
+    @OneToOne(mappedBy = "userProfile")
+    private Tutor tutor;
+
+    @Convert(converter = UserTypeConverter.class)
+    private UserType userType;
+
+    @Column(nullable = false)
+    @Convert(converter = ProviderConverter.class)
+    private Provider provider;
 }

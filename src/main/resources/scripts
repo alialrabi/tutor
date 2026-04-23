@@ -1,0 +1,385 @@
+--DROP SCHEMA tutor;
+
+CREATE SCHEMA tutor AUTHORIZATION postgres;
+
+-- DROP SEQUENCE tutor.categories_seq;
+
+CREATE SEQUENCE tutor.categories_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.comment_id_seq;
+
+CREATE SEQUENCE tutor.comment_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.lu_languages_id_seq;
+
+CREATE SEQUENCE tutor.lu_languages_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.msg_notification_seq;
+
+CREATE SEQUENCE tutor.msg_notification_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.permissions_seq;
+
+CREATE SEQUENCE tutor.permissions_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 50
+	NO CYCLE;
+-- DROP SEQUENCE tutor.roles_seq;
+
+CREATE SEQUENCE tutor.roles_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 50
+	NO CYCLE;
+-- DROP SEQUENCE tutor.session_id_seq;
+
+CREATE SEQUENCE tutor.session_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.sessions_seq;
+
+CREATE SEQUENCE tutor.sessions_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.time_slot_id_seq;
+
+CREATE SEQUENCE tutor.time_slot_id_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.time_slots_seq;
+
+CREATE SEQUENCE tutor.time_slots_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE tutor.tutor_seq;
+
+CREATE SEQUENCE tutor.tutor_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 50
+	NO CYCLE;
+-- DROP SEQUENCE tutor.users_seq;
+
+CREATE SEQUENCE tutor.users_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 50
+	NO CYCLE;-- tutor.categories definition
+
+-- Drop table
+
+-- DROP TABLE tutor.categories;
+
+CREATE TABLE tutor.categories (
+	id int8 DEFAULT nextval('tutor.categories_seq'::regclass) NOT NULL,
+	"name" varchar(255) NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	status INT,
+	created_at TIMESTAMP,
+	updated_at TIMESTAMP,
+	is_deleted BOOLEAN DEFAULT FALSE,
+	CONSTRAINT categories_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.lu_languages definition
+
+-- Drop table
+
+-- DROP TABLE tutor.lu_languages;
+
+CREATE TABLE tutor.lu_languages (
+	id bigserial NOT NULL,
+	name_ar varchar(255) NOT NULL,
+	name_en varchar(255) NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	CONSTRAINT lu_languages_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.msg_notification definition
+
+-- Drop table
+
+-- DROP TABLE tutor.msg_notification;
+
+CREATE TABLE tutor.msg_notification (
+	id int8 DEFAULT nextval('tutor.msg_notification_seq'::regclass) NOT NULL,
+	sender_email varchar(255) NOT NULL,
+	receiver_email varchar(255) NOT NULL,
+	subject varchar(500) NULL,
+	body text NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	CONSTRAINT msg_notification_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.permissions definition
+
+-- Drop table
+
+-- DROP TABLE tutor.permissions;
+
+CREATE TABLE tutor.permissions (
+	id int8 DEFAULT nextval('tutor.permissions_seq'::regclass) NOT NULL,
+	"name" varchar(100) NOT NULL,
+	description varchar(255) NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	is_deleted bool NULL,
+	CONSTRAINT permissions_name_key UNIQUE (name),
+	CONSTRAINT permissions_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.roles definition
+
+-- Drop table
+
+-- DROP TABLE tutor.roles;
+
+CREATE TABLE tutor.roles (
+	id int8 DEFAULT nextval('tutor.roles_seq'::regclass) NOT NULL,
+	"name" varchar(50) NOT NULL,
+	description varchar(255) NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	is_deleted bool NULL,
+	CONSTRAINT roles_name_key UNIQUE (name),
+	CONSTRAINT roles_pkey PRIMARY KEY (id)
+);
+
+
+-- tutor.user_profile definition
+
+-- Drop table
+
+-- DROP TABLE tutor.user_profile;
+
+CREATE TABLE tutor.user_profile (
+	id int8 DEFAULT nextval('tutor.users_seq'::regclass) NOT NULL,
+	email varchar(255) NOT NULL,
+	password varchar(255),
+	first_name varchar(100) NOT NULL,
+	last_name varchar(100) NOT NULL,
+	phone_number varchar(20),
+	status int8 DEFAULT 0 NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	jwt_token varchar(1000) NULL,
+	image bytea NULL,
+	enabled bool NULL,
+	user_type INT DEFAULT 1 NULL ChECK (user_type IN (1, 2)),
+	provider varchar NULL,
+	is_deleted bool NULL,
+	CONSTRAINT user_profile_email_key UNIQUE (email),
+	CONSTRAINT user_profile_pkey PRIMARY KEY (id));
+
+
+-- tutor.role_permissions definition
+
+-- Drop table
+
+-- DROP TABLE tutor.role_permissions;
+
+CREATE TABLE tutor.role_permissions (
+	role_id int8 NOT NULL,
+	permission_id int8 NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	is_deleted bool NULL,
+	CONSTRAINT role_permissions_pk PRIMARY KEY (role_id, permission_id),
+	CONSTRAINT role_permissions_permission_fk FOREIGN KEY (permission_id) REFERENCES tutor.permissions(id) ON DELETE CASCADE,
+	CONSTRAINT role_permissions_role_fk FOREIGN KEY (role_id) REFERENCES tutor.roles(id) ON DELETE CASCADE
+);
+
+
+-- tutor.tutors definition
+
+-- Drop table
+
+-- DROP TABLE tutor.tutors;
+
+CREATE TABLE tutor.tutors (
+	id int8 DEFAULT nextval('tutor.tutor_seq'::regclass) NOT NULL,
+	user_id int8 NOT NULL,
+	bio text NULL,
+	experience_years int4 NULL,
+	hourly_rate numeric(10, 2) NULL,
+	accepts_one_to_one bool DEFAULT true NULL,
+	accepts_one_to_many bool DEFAULT false NULL,
+	rating numeric(3, 2) DEFAULT 0 NULL,
+	total_reviews int4 DEFAULT 0 NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	no_of_sessions int4 NULL,
+	video_id varchar NULL,
+	image bytea NULL,
+	category_id int8 NULL,
+	title varchar NULL,
+	is_deleted bool NULL,
+	CONSTRAINT tutors_pkey PRIMARY KEY (id),
+	CONSTRAINT tutors_user_id_key UNIQUE (user_id),
+	CONSTRAINT fk_tutor_category FOREIGN KEY (category_id) REFERENCES tutor.categories(id) ON DELETE SET NULL,
+	CONSTRAINT fk_tutor_user FOREIGN KEY (user_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE
+);
+
+
+-- tutor.user_roles definition
+
+-- Drop table
+
+-- DROP TABLE tutor.user_roles;
+
+CREATE TABLE tutor.user_roles (
+	user_id int8 NOT NULL,
+	role_id int8 NOT NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	deleted_at timestamp NULL,
+	created_by int8 NULL,
+	CONSTRAINT user_roles_pkey PRIMARY KEY (user_id, role_id),
+	CONSTRAINT user_roles_role_fk FOREIGN KEY (role_id) REFERENCES tutor.roles(id) ON DELETE CASCADE,
+	CONSTRAINT user_roles_user_fk FOREIGN KEY (user_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE
+);
+
+
+-- tutor."comments" definition
+
+-- Drop table
+
+-- DROP TABLE tutor."comments";
+
+CREATE TABLE tutor."comments" (
+	id int8 DEFAULT nextval('tutor.comment_id_seq'::regclass) NOT NULL,
+	"content" text NOT NULL,
+	tutor_id int8 NOT NULL,
+	user_profile_id int8 NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	CONSTRAINT comments_pkey PRIMARY KEY (id),
+	CONSTRAINT fk_comments_tutor FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE,
+	CONSTRAINT fk_comments_user_profile FOREIGN KEY (user_profile_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE
+);
+
+
+-- tutor."session" definition
+
+-- Drop table
+
+-- DROP TABLE tutor."session";
+
+CREATE TABLE tutor."session" (
+	id bigserial NOT NULL,
+	user_profile_id int8 NOT NULL,
+	tutor_id int8 NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	room_id varchar(255) NULL,
+	session_date date NOT NULL,
+	start_time time NOT NULL,
+	end_time time NOT NULL,
+	CONSTRAINT session_pkey PRIMARY KEY (id),
+	CONSTRAINT session_student_id_fkey FOREIGN KEY (user_profile_id) REFERENCES tutor.user_profile(id) ON DELETE CASCADE,
+	CONSTRAINT session_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE
+);
+
+
+-- tutor.time_slot definition
+
+-- Drop table
+
+-- DROP TABLE tutor.time_slot;
+
+CREATE TABLE tutor.time_slot (
+	id bigserial NOT NULL,
+	tutor_id int8 NOT NULL,
+	start_time time NOT NULL,
+	end_time time NOT NULL,
+	status int8 DEFAULT 0 NOT NULL,
+	is_deleted int4 NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	created_by int8 NULL,
+	updated_by int8 NULL,
+	day_of_week int4 NULL,
+	CONSTRAINT time_slot_pkey PRIMARY KEY (id),
+	CONSTRAINT time_slot_tutor_id_fkey FOREIGN KEY (tutor_id) REFERENCES tutor.tutors(id) ON DELETE CASCADE
+);
+
+alter table tutor.msg_notification
+add column is_sent bool not null default false

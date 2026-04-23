@@ -11,9 +11,7 @@ import java.util.List;
 
 @Component
 public class AuthenticationMangerImpl implements AuthenticationManager {
-	
-	
-	
+
     private final List<AuthenticationProvider> providers = new ArrayList<>();
 
     public AuthenticationMangerImpl(List<AuthenticationProvider> providerList) {

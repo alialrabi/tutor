@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Tutor {
+public class Tutor extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tutor_seq_gen")
@@ -32,7 +32,10 @@ public class Tutor {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserProfile user;
+    private UserProfile userProfile;
+
+    @Column(name = "title")
+    private String title;
 
     @Column(columnDefinition = "text")
     private String bio;
@@ -55,17 +58,14 @@ public class Tutor {
     @Column(name = "total_reviews")
     private Integer totalReviews = 0;
 
-    @Column(nullable = false)
-    private Long status = 0L;
-
     @Column(name = "no_of_sessions")
     private Integer numberOfSessions;
 
     @Column(name = "video_id")
     private String videoId;
 
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
 }

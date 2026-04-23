@@ -4,9 +4,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.function.Function;
+
 public class SecurityUtil {
 
-    public static Long getCurrentUserId() {
+    public static <T> T getCurrentData(Function<AppUserDetails, T> resolver) {
         Authentication authentication = SecurityContextHolder
                 .getContext()
                 .getAuthentication();
@@ -17,10 +19,11 @@ public class SecurityUtil {
 
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof UserDetailsImpl userDetails) {
-            return userDetails.getUserId();
+        if (principal instanceof AppUserDetails userDetails) {
+            return resolver.apply(userDetails);
         }
 
         throw new BadCredentialsException("Invalid authentication principal");
     }
+
 }

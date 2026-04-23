@@ -21,11 +21,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserProfileRepository userProfileRepository;
 
     @Override
-    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserProfile user = userProfileRepository.findByEmail(email)
+    public AppUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserProfile user = userProfileRepository.findByEmailWithRolesAndPermissionsAndTutor(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
+
         for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
             for (Permission permission : role.getPermissions()) {
@@ -33,6 +34,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
         }
 
-        return new UserDetailsImpl(user.getEmail(), user.getPassWord(), authorities);
+        return new AppUserDetails(user, authorities);
     }
 }

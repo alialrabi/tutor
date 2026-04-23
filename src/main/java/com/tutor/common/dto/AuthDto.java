@@ -2,8 +2,13 @@ package com.tutor.common.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
 
 public class AuthDto {
 
@@ -65,4 +70,38 @@ public class AuthDto {
         private java.util.List<String> roles;
         private java.util.List<String> permissions;
     }
+
+    @Getter
+    @Setter
+    public static class TutorRegisterRequest {
+        @NotBlank @Email
+        private String email;
+
+        @NotBlank
+        private String bio;
+
+        @NotNull
+        private Integer experienceYears;
+
+        @NotNull
+        private BigDecimal hourlyRate;
+
+        private Boolean acceptsOneToOne = true;
+
+        private Boolean acceptsOneToMany = false;
+        private String videoId;
+
+        private byte[] image;
+    }
+
+    @Getter
+    @Setter
+    public static class UploadPhotoRequest {
+        @NotBlank
+        @NotNull
+        private String email;
+        @NotNull
+        private byte []image;
+    }
+
 }

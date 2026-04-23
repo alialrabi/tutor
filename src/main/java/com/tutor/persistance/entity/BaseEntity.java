@@ -1,17 +1,20 @@
 package com.tutor.persistance.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
 @Data
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public abstract class BaseEntity extends AuditableEntity implements Serializable {
+
+    @Column(name = "status")
+    private Integer status;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
 }

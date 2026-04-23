@@ -6,4 +6,5 @@ import com.tutor.common.dto.ResponseDataModel;
 
 public interface UserUseCase {
     ResponseDataModel<UserDto> findAll(SearchRequest searchRequest);
+
 }
